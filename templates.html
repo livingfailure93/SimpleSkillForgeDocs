@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Templates - Simple Skill Forge</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="format-selector" id="top">
+    <span class="format-label">View Format:</span>
+    <a href="index.html" class="format-link active">Multi-Page</a>
+    <a href="single-page.html" class="format-link">Single Page</a>
+  </div>
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="quick-start.html">Quick Start</a></li>
+      <li><a href="skill-forge.html">Skill Forge</a></li>
+      <li><a href="skill-tree-forge.html">Skill Trees</a></li>
+      <li><a href="skill-set-forge.html">Skill Sets</a></li>
+      <li><a href="skill-combo-forge.html">Skill Combos</a></li>
+      <li><a href="schema-export.html">AI Workflow</a></li>
+      <li><a href="templates.html" class="active">Templates</a></li>
+      <li><a href="api-reference.html">API Reference</a></li>
+      <li><a href="integration.html">Integration</a></li>
+      <li><a href="demos.html">Demos</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>Simple Skill Forge</h1>
+    <p class="tagline">Generate Complete Skill Databases, Skill Trees, Loadouts, and Combos in Minutes.</p>
+  </div>
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> / Templates
+  </div>
+
+  <div class="page-layout">
+    <aside class="toc">
+      <h3>On This Page</h3>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#arpg">ARPG</a></li>
+        <li><a href="#moba">MOBA</a></li>
+        <li><a href="#mmo">MMO</a></li>
+        <li><a href="#turn-based">Turn-Based</a></li>
+        <li><a href="#action">Action</a></li>
+        <li><a href="#roguelike">Roguelike</a></li>
+        <li><a href="#customization">Customization</a></li>
+      </ul>
+    </aside>
+    <main class="content">
+
+  <div class="section">
+    <h1 id="overview">Genre Templates</h1>
+    <p>All 4 forges ship with <strong>6 genre templates</strong> that pre-populate property definitions with
+      genre-appropriate Categories, Flags, Numerics, and Texts. Templates are a starting point &mdash; you can
+      modify, add, or remove any property after applying a template.</p>
+    <p>Select a template in <strong>Step 1 (Setup)</strong> of any wizard. Choosing "None" starts with a blank
+      slate. Changing templates after defining entries will prompt for confirmation, since it replaces all
+      property definitions.</p>
+    <div class="warning">Templates only set property <strong>definitions</strong> (the schema). They do not
+      create any skill/tree/set/combo entries. Use the AI schema export or the builder in Step 3 to create content.</div>
+  </div>
+
+  <div class="section">
+    <h2 id="arpg">ARPG Template</h2>
+    <p>Designed for action RPGs (Diablo, Path of Exile, Last Epoch). Emphasizes damage types, resource management,
+      and scaling per rank.</p>
+
+    <h3>Skill-Level Properties (Skill Forge)</h3>
+    <table>
+      <tr><th>Type</th><th>Name</th><th>Details</th></tr>
+      <tr><td>Category</td><td>Skill Type</td><td>Attack, Spell, Buff, Debuff, Passive, Movement, Summon, Aura</td></tr>
+      <tr><td>Category</td><td>Element</td><td>Physical, Fire, Ice, Lightning, Poison, Holy, Dark, Arcane</td></tr>
+      <tr><td>Category</td><td>Target Type</td><td>Self, Single Target, AoE, Cone, Line, Chain, Global</td></tr>
+      <tr><td>Flag</td><td>Is Passive</td><td>Default: false</td></tr>
+      <tr><td>Flag</td><td>Is Ultimate</td><td>Default: false</td></tr>
+      <tr><td>Numeric</td><td>Base Cooldown</td><td>Seconds</td></tr>
+      <tr><td>Numeric</td><td>Mana Cost</td><td>Base resource cost</td></tr>
+      <tr><td>Text</td><td>Lore</td><td>Flavor text</td></tr>
+    </table>
+
+    <h3>Rank-Level Properties (Skill Forge)</h3>
+    <table>
+      <tr><th>Type</th><th>Name</th><th>Details</th></tr>
+      <tr><td>Numeric</td><td>Damage</td><td>Per-rank damage value</td></tr>
+      <tr><td>Numeric</td><td>Duration</td><td>Effect duration in seconds</td></tr>
+      <tr><td>Numeric</td><td>Cooldown Reduction</td><td>Percentage reduction per rank</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 id="moba">MOBA Template</h2>
+    <p>Designed for MOBAs (League of Legends, Dota 2). Focuses on ability scaling, lane impact, and team synergy.</p>
+    <p>Skill-level categories include <strong>Lane Phase</strong> (Early, Mid, Late), <strong>Role Fit</strong>
+      (Carry, Support, Tank, Assassin, Mage, Bruiser), and <strong>Crowd Control</strong> type. Rank-level
+      numerics emphasize per-level scaling values and cooldown reduction.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="mmo">MMO Template</h2>
+    <p>Designed for MMOs (World of Warcraft, Final Fantasy XIV). Emphasizes class identity, raid roles, and
+      resource management.</p>
+    <p>Skill-level categories include <strong>Skill Category</strong> (Core, Talent, Racial, Profession),
+      <strong>Resource Type</strong> (Mana, Energy, Rage, Focus, Combo Points), and <strong>Cast Type</strong>
+      (Instant, Channeled, Cast Time, Toggle). Rank-level properties track per-rank GCD modifications and
+      resource cost scaling.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="turn-based">Turn-Based Template</h2>
+    <p>Designed for turn-based RPGs (Final Fantasy, Persona, Fire Emblem). Focuses on action economy, turn order,
+      and elemental weakness systems.</p>
+    <p>Skill-level categories include <strong>Action Cost</strong> (Free, Half Turn, Full Turn, Multi-Turn),
+      <strong>Element</strong>, and <strong>Range</strong>. Flags include "Consumes Turn" and "Can Counter".
+      Rank numerics track hit rate, critical rate, and accuracy bonuses.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="action">Action Template</h2>
+    <p>Designed for action games (Devil May Cry, Bayonetta, God of War). Emphasizes combo potential, input
+      complexity, and style scoring.</p>
+    <p>Skill-level categories include <strong>Input Type</strong> (Press, Hold, Charge, Direction+Press),
+      <strong>Attack Type</strong> (Light, Heavy, Launcher, Slam, Projectile), and <strong>Cancel Window</strong>.
+      Flags include "Can Air Cancel" and "Has Super Armor". Rank numerics include "Hit Count" and
+      "Style Points".</p>
+  </div>
+
+  <div class="section">
+    <h2 id="roguelike">Roguelike Template</h2>
+    <p>Designed for roguelikes (Hades, Slay the Spire, Dead Cells). Emphasizes run synergies, randomized
+      upgrades, and resource efficiency.</p>
+    <p>Skill-level categories include <strong>Rarity</strong> (Common, Uncommon, Rare, Epic, Legendary),
+      <strong>Synergy Tag</strong> (multiple synergy groups), and <strong>Acquisition</strong> (Starter, Shop,
+      Drop, Boss Reward, Secret). Flags include "Stackable" and "Removable". Rank numerics track
+      "Stack Multiplier" and "Trigger Chance".</p>
+  </div>
+
+  <div class="section">
+    <h2 id="customization">Customizing Templates</h2>
+    <p>After applying a template, you can freely:</p>
+    <ul>
+      <li><strong>Add</strong> new categories, flags, numerics, or texts</li>
+      <li><strong>Remove</strong> any property you don't need</li>
+      <li><strong>Rename</strong> labels and entries</li>
+      <li><strong>Reorder</strong> properties (drag handles in the ReorderableList)</li>
+      <li><strong>Add category entries</strong> to existing categories</li>
+    </ul>
+    <p>All changes in Step 2 automatically sync to existing entries in Step 3. New properties get default values;
+      removed properties are cleaned up.</p>
+    <div class="info">The template system tracks modifications. If you've customized a template and switch to a
+      different one, you'll see a confirmation dialog showing what will change.</div>
+  </div>
+
+    </main>
+  </div>
+
+  <div class="page-nav">
+    <a href="schema-export.html">&larr; AI Workflow</a>
+    <a href="api-reference.html">API Reference &rarr;</a>
+  </div>
+
+  <a href="#top" class="scroll-btn scroll-to-top" title="Scroll to top">&uarr;</a>
+
+</body>
+</html>

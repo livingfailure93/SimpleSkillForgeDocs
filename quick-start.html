@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Start - Simple Skill Forge</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+  <div class="format-selector" id="top">
+    <span class="format-label">View Format:</span>
+    <a href="index.html" class="format-link active">Multi-Page</a>
+    <a href="single-page.html" class="format-link">Single Page</a>
+  </div>
+
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="quick-start.html" class="active">Quick Start</a></li>
+      <li><a href="skill-forge.html">Skill Forge</a></li>
+      <li><a href="skill-tree-forge.html">Skill Trees</a></li>
+      <li><a href="skill-set-forge.html">Skill Sets</a></li>
+      <li><a href="skill-combo-forge.html">Skill Combos</a></li>
+      <li><a href="schema-export.html">AI Workflow</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API Reference</a></li>
+      <li><a href="integration.html">Integration</a></li>
+      <li><a href="demos.html">Demos</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>Simple Skill Forge</h1>
+    <p class="tagline">Generate Complete Skill Databases, Skill Trees, Loadouts, and Combos in Minutes.</p>
+  </div>
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> / Quick Start
+  </div>
+
+  <div class="page-layout">
+    <aside class="toc">
+      <h3>On This Page</h3>
+      <ul>
+        <li><a href="#your-first-skill-database">Your First Skill Database</a></li>
+        <li><a href="#step-1-setup">Step 1: Setup</a></li>
+        <li><a href="#step-2-definitions">Step 2: Definitions</a></li>
+        <li><a href="#step-3-builder">Step 3: Builder</a></li>
+        <li><a href="#step-4-settings">Step 4: Settings</a></li>
+        <li><a href="#step-5-generate">Step 5: Generate</a></li>
+        <li><a href="#using-your-database">Using Your Database at Runtime</a></li>
+        <li><a href="#next-steps">Next Steps</a></li>
+      </ul>
+    </aside>
+    <main class="content">
+
+  <div class="section">
+    <h2 id="your-first-skill-database">Your First Skill Database</h2>
+    <p>This guide walks you through creating a complete skill database using the <strong>Skill Forge</strong>
+      &mdash; from opening the wizard to using the generated database in your game code. The entire process
+      takes about 5 minutes.</p>
+    <p>By the end, you will have:</p>
+    <ul>
+      <li>A type-safe enum of all your skill codes</li>
+      <li>A ScriptableObject database with a custom inspector</li>
+      <li>Runtime-ready data you can query from any script</li>
+    </ul>
+
+    <div class="info">
+      <strong>Prerequisites:</strong> Simple Skill Forge must be installed. See
+      <a href="installation.html">Installation</a> if you have not done this yet.
+      Unity 2021.3 or later is required.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 id="step-1-setup">Step 1: Setup</h2>
+    <p>Open the Skill Forge wizard:</p>
+    <div class="code-block">Window &gt; Living Failure &gt; Simple Skill Forge &gt; Skill Forge</div>
+    <p>The wizard opens to <strong>Step 1: Setup</strong>. Configure these fields:</p>
+
+    <h3>Database Name</h3>
+    <p>Enter a name for your database, e.g., <code>RPGSkills</code>. This determines the generated class names:</p>
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td>Database Name</td>
+        <td><code>RPGSkills</code></td>
+      </tr>
+      <tr>
+        <td>Generated Enum</td>
+        <td><code>RPGSkillsType</code></td>
+      </tr>
+      <tr>
+        <td>Generated Database</td>
+        <td><code>RPGSkillsDatabase</code></td>
+      </tr>
+      <tr>
+        <td>Generated Editor</td>
+        <td><code>RPGSkillsDatabaseEditor</code></td>
+      </tr>
+    </table>
+
+    <h3>Namespace</h3>
+    <p>Optionally set a namespace for the generated code. Leave blank if your project does not use namespaces.</p>
+
+    <h3>Template</h3>
+    <p>Select a genre template to pre-populate property definitions. For this walkthrough, choose
+      <strong>ARPG</strong> &mdash; it provides a solid set of categories (Skill Type, Element, Target Type),
+      flags (Is Passive, Is Ultimate), numerics (Mana Cost, Cooldown, Cast Time), and texts (Tooltip, Lore)
+      at both skill-level and rank-level.</p>
+
+    <div class="info">
+      <strong>Tip:</strong> You can select <strong>None</strong> to start with a blank slate and define
+      every property yourself. Templates are just a starting point &mdash; you can add, remove, or modify
+      any property in Step 2.
+    </div>
+
+    <h3>Linked Databases</h3>
+    <p>If you have companion packages installed (SAF, SIF, SEF, SQF), you can drag-and-drop their generated
+      database assets here. This enables searchable dropdowns for cross-forge reference fields in Step 3
+      (e.g., selecting an item code from your SIF database instead of typing it manually).</p>
+    <p>For this walkthrough, you can skip linked databases. They are entirely optional.</p>
+
+    <p>Click <strong>Next</strong> to proceed to Step 2.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="step-2-definitions">Step 2: Definitions</h2>
+    <p>This is where you define the <strong>dynamic property schema</strong> for your skills. The Skill Forge
+      uses a <strong>two-level property system</strong>:</p>
+    <ul>
+      <li><strong>Skill-Level Properties</strong> &mdash; apply to the skill as a whole (e.g., Skill Type, Element, Is Passive)</li>
+      <li><strong>Rank-Level Properties</strong> &mdash; apply to each individual rank of a skill (e.g., Damage, Mana Cost, Area of Effect)</li>
+    </ul>
+
+    <p>If you chose the ARPG template, you will see pre-populated definitions at both levels. You can customize
+      them freely.</p>
+
+    <h3>Property Types</h3>
+    <p>There are 4 types of dynamic properties, available at both skill-level and rank-level:</p>
+    <table>
+      <tr>
+        <th>Type</th>
+        <th>What It Stores</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><strong>Category</strong></td>
+        <td>Selection from a list of named entries</td>
+        <td>Skill Type: [Attack, Buff, Debuff, Heal, Summon]</td>
+      </tr>
+      <tr>
+        <td><strong>Flag</strong></td>
+        <td>Boolean (true/false)</td>
+        <td>Is Passive, Is Ultimate, Requires Line of Sight</td>
+      </tr>
+      <tr>
+        <td><strong>Numeric</strong></td>
+        <td>Float or integer value (optionally a range)</td>
+        <td>Mana Cost, Cooldown, Cast Time, Base Damage</td>
+      </tr>
+      <tr>
+        <td><strong>Text</strong></td>
+        <td>String value (single or multi-line)</td>
+        <td>Tooltip, Lore Text, VFX Path</td>
+      </tr>
+    </table>
+
+    <h3>Adding a Property</h3>
+    <p>To add a new property, expand the relevant section (e.g., Skill-Level Categories) and click the
+      <strong>+</strong> button at the bottom of the list. Fill in the label/name and any additional settings
+      (entries for categories, constraints for numerics, line count for texts).</p>
+
+    <h3>Removing or Reordering</h3>
+    <p>Use the <strong>-</strong> button to remove a property, or drag entries in the ReorderableList to
+      reorder them. All existing skill entries are automatically synced when you add, remove, or reorder definitions.</p>
+
+    <h3>JSON Schema Export</h3>
+    <p>At the bottom of Step 2, you will find the <strong>JSON Schema</strong> section. This lets you export
+      your property definitions in 3 formats (Full JSON, Light JSON, Markdown) for AI-assisted bulk content
+      generation. You can also import skills from JSON. See <a href="schema-export.html">AI Workflow</a> for details.</p>
+
+    <p>Click <strong>Next</strong> to proceed to Step 3.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="step-3-builder">Step 3: Builder</h2>
+    <p>The builder is a split-panel editor where you create and edit individual skill entries.</p>
+
+    <h3>Left Panel &mdash; Skill List</h3>
+    <p>The left panel shows all your skills in a scrollable list with:</p>
+    <ul>
+      <li><strong>Search bar</strong> &mdash; filter by name or code</li>
+      <li><strong>Category filter</strong> &mdash; show only skills of a specific type</li>
+      <li><strong>Sort</strong> &mdash; alphabetical, by code, or by category</li>
+      <li><strong>Pagination</strong> &mdash; handles large lists efficiently</li>
+      <li><strong>Bulk operations</strong> &mdash; select multiple skills for delete or duplicate</li>
+      <li><strong>+ / - buttons</strong> &mdash; add or remove skills</li>
+    </ul>
+    <p>Click any skill in the list to select it and edit its details in the right panel.</p>
+
+    <h3>Right Panel &mdash; Skill Editor</h3>
+    <p>The right panel displays all editable fields for the selected skill, organized into foldout sections:</p>
+    <ul>
+      <li><strong>Identity</strong> &mdash; Code (SCREAMING_SNAKE_CASE), display name, description, icon</li>
+      <li><strong>Categories</strong> &mdash; dropdown selectors for each skill-level category</li>
+      <li><strong>Flags</strong> &mdash; toggle checkboxes for each skill-level flag</li>
+      <li><strong>Numeric Properties</strong> &mdash; value fields for each skill-level numeric</li>
+      <li><strong>Text Properties</strong> &mdash; text fields for each skill-level text</li>
+      <li><strong>Ranks</strong> &mdash; a list of ranks, each with its own rank-level properties, upgrade
+        costs (resource code + amount), and optional SAF modifier assets</li>
+      <li><strong>Prerequisites</strong> &mdash; conditions that must be met to learn/use the skill
+        (e.g., "FIREBALL at least rank 3")</li>
+      <li><strong>Skill Modifiers</strong> &mdash; SAF modifier assets attached to the skill itself
+        (requires Simple Attribute Forge)</li>
+      <li><strong>Cross-Forge References</strong> &mdash; 12 fields linking to items, enemies, quests, and
+        factions from companion forges</li>
+    </ul>
+
+    <h3>Creating Your First Skill</h3>
+    <div class="step-container">
+      <span class="step-number">1</span>
+      Click the <strong>+</strong> button in the left panel to add a new skill.
+    </div>
+    <div class="step-container">
+      <span class="step-number">2</span>
+      In the <strong>Identity</strong> section, set the Code to <code>FIREBALL</code> and the Display Name
+      to <code>Fireball</code>. Add a description like <code>Hurls a ball of fire at the target.</code>
+    </div>
+    <div class="step-container">
+      <span class="step-number">3</span>
+      Set category values (e.g., Skill Type: Attack, Element: Fire).
+    </div>
+    <div class="step-container">
+      <span class="step-number">4</span>
+      Set flag values (e.g., Is Passive: unchecked).
+    </div>
+    <div class="step-container">
+      <span class="step-number">5</span>
+      Set numeric values (e.g., Mana Cost: 25, Cooldown: 3.0).
+    </div>
+    <div class="step-container">
+      <span class="step-number">6</span>
+      Expand the <strong>Ranks</strong> section and add ranks. Each rank has its own rank-level property
+      values (e.g., Rank 1: Damage 50, Rank 2: Damage 80, Rank 3: Damage 120).
+    </div>
+
+    <p>Repeat to add more skills. Use <strong>Duplicate</strong> to clone an existing skill as a starting point.</p>
+
+    <p>Click <strong>Next</strong> to proceed to Step 4.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="step-4-settings">Step 4: Settings</h2>
+    <p>Configure where and how the database is generated.</p>
+
+    <h3>Output Path</h3>
+    <p>Set the folder where generated files will be placed. The default is <code>Assets/GeneratedSkillDatabases/</code>.
+      Click <strong>Browse</strong> to choose a different location.</p>
+
+    <h3>Custom Paths</h3>
+    <p>Enable <strong>Use Custom Paths</strong> to specify separate output folders for scripts (<code>.cs</code> files)
+      and assets (<code>.asset</code> files). Useful if you want scripts in a <code>Scripts/</code> folder
+      and assets in a <code>Data/</code> folder.</p>
+
+    <h3>Generation Toggles</h3>
+    <ul>
+      <li><strong>Generate Enum</strong> &mdash; produces the <code>{Prefix}Type.cs</code> enum file.
+        Disable if you want to manage skill identifiers differently.</li>
+      <li><strong>Generate Database</strong> &mdash; produces the <code>{Prefix}Database.cs</code> ScriptableObject
+        and <code>{Prefix}DatabaseEditor.cs</code> custom inspector. Almost always left enabled.</li>
+    </ul>
+
+    <h3>File Preview</h3>
+    <p>The bottom of Step 4 shows a preview of all files that will be generated, including their full paths.
+      Review this before proceeding.</p>
+
+    <p>Click <strong>Next</strong> to proceed to Step 5.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="step-5-generate">Step 5: Generate</h2>
+    <p>The final step shows a summary of your database and a <strong>Generate</strong> button.</p>
+
+    <h3>Summary</h3>
+    <p>Review the summary to confirm everything is correct: database name, number of skills, number of properties,
+      output paths, and enabled generation options.</p>
+
+    <h3>Generation Process</h3>
+    <p>Click <strong>Generate</strong> to start the two-phase generation:</p>
+    <div class="step-container">
+      <span class="step-number">1</span>
+      <strong>Phase 1 &mdash; Script Generation:</strong> The forge writes the <code>.cs</code> files
+      (enum, database class, custom editor) to your output folder. Unity then triggers a domain reload
+      to compile the new scripts.
+    </div>
+    <div class="step-container">
+      <span class="step-number">2</span>
+      <strong>Phase 2 &mdash; Asset Creation:</strong> After the domain reload completes, the forge
+      automatically creates the <code>.asset</code> ScriptableObject and populates it with all your
+      skill data. A log message confirms completion.
+    </div>
+
+    <div class="warning">
+      <strong>Do not</strong> close the wizard window or switch editor focus during generation.
+      The two-phase process relies on an <code>[InitializeOnLoad]</code> handler that runs after
+      the domain reload to complete Phase 2.
+    </div>
+
+    <h3>Generated Files</h3>
+    <p>After generation completes, you will find these files in your output folder:</p>
+    <div class="file-tree"><span class="folder">Assets/GeneratedSkillDatabases/</span>
+  <span class="cs-file">RPGSkillsType.cs</span>              &larr; enum: RPGSkillsType.FIREBALL, .ICE_BOLT, etc.
+  <span class="cs-file">RPGSkillsDatabase.cs</span>          &larr; ScriptableObject implementing ISimpleSkillDataSource
+  <span class="cs-file">RPGSkillsDatabaseEditor.cs</span>    &larr; custom inspector with search, sort, filter
+  RPGSkillsDatabase.asset            &larr; your data, ready to assign</div>
+
+    <div class="success">
+      <strong>Done!</strong> Select the <code>.asset</code> file in the Project window and inspect it.
+      The custom editor displays your skills in the same split-panel layout as the wizard's builder.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 id="using-your-database">Using Your Database at Runtime</h2>
+    <p>The generated database implements <code>ISimpleSkillDataSource</code>, giving you a clean API
+      to query skill data from any script.</p>
+
+    <h3>Assigning the Database</h3>
+    <p>Add a <code>ScriptableObject</code> field to your MonoBehaviour and drag the generated <code>.asset</code>
+      file onto it in the Inspector:</p>
+    <div class="code-block">using SimpleSkillForge;
+using UnityEngine;
+
+public class SkillManager : MonoBehaviour
+{
+    [SerializeField] private ScriptableObject skillDatabase;
+
+    private ISimpleSkillDataSource _skills;
+
+    void Awake()
+    {
+        _skills = skillDatabase as ISimpleSkillDataSource;
+    }
+}</div>
+
+    <h3>Querying Skills</h3>
+    <p>Use the interface methods to access your data:</p>
+    <div class="code-block">// Get all skill definitions
+SimpleSkillDefinition[] allSkills = _skills.GetSkillDefinitions();
+
+// Look up a skill by code
+SimpleSkillDefinition? fireball = _skills.GetSkillByCode("FIREBALL");
+
+// Get all skill codes and names
+string[] codes = _skills.GetSkillCodes();
+string[] names = _skills.GetSkillNames();
+
+// Check if a skill exists
+bool exists = _skills.HasSkill("FIREBALL");
+
+// Get the generated enum type for type-safe lookups
+Type enumType = _skills.GetSkillEnumType();</div>
+
+    <h3>Reading Dynamic Properties</h3>
+    <p>Access the dynamic properties you defined in Step 2 using index-based accessors.
+      The index corresponds to the order you defined them (0-based):</p>
+    <div class="code-block">SimpleSkillDefinition skill = allSkills[0];
+
+// Skill-level properties
+int skillType = skill.GetCategoryValue(0);      // first category (e.g., Skill Type)
+bool isPassive = skill.GetFlagValue(0);          // first flag (e.g., Is Passive)
+float manaCost = skill.GetNumericValue(0);       // first numeric (e.g., Mana Cost)
+string tooltip = skill.GetTextValue(0);          // first text (e.g., Tooltip)
+
+// Rank-level properties (on each rank)
+SimpleSkillRank rank = skill.ranks[0];
+float damage = rank.GetNumericValue(0);          // first rank-level numeric (e.g., Damage)</div>
+
+    <h3>Property Definition Labels</h3>
+    <p>To get human-readable labels for your properties (useful for UI), query the data source:</p>
+    <div class="code-block">// Skill-level property labels
+string[] categoryLabels = _skills.GetCategoryLabels();   // ["Skill Type", "Element", ...]
+string[] flagNames = _skills.GetFlagNames();              // ["Is Passive", "Is Ultimate", ...]
+string[] numericNames = _skills.GetNumericNames();        // ["Mana Cost", "Cooldown", ...]
+string[] textNames = _skills.GetTextNames();              // ["Tooltip", "Lore", ...]
+
+// Category entries (options for a specific category)
+string[] skillTypes = _skills.GetCategoryEntries(0);     // ["Attack", "Buff", "Debuff", ...]
+
+// Rank-level property labels
+string[] rankCatLabels = _skills.GetRankCategoryLabels();
+string[] rankFlagNames = _skills.GetRankFlagNames();
+string[] rankNumericNames = _skills.GetRankNumericNames();
+string[] rankTextNames = _skills.GetRankTextNames();</div>
+
+    <h3>Filtering</h3>
+    <p>Query skills by property values:</p>
+    <div class="code-block">// All skills where category 0 (Skill Type) == entry 3 (Heal)
+SimpleSkillDefinition[] heals = _skills.GetSkillsByCategory(0, 3);
+
+// All skills where flag 0 (Is Passive) == true
+SimpleSkillDefinition[] passives = _skills.GetSkillsByFlag(0, true);
+
+// All skills where numeric 1 (Cooldown) is between 0 and 5
+SimpleSkillDefinition[] quickSkills = _skills.GetSkillsByNumericRange(1, 0f, 5f);
+
+// All skills usable by a specific character class (requires SAF Character Templates)
+SimpleSkillDefinition[] mageSkills = _skills.GetSkillsUsableByClass("Mage");</div>
+
+    <h3>Using SimpleSkillHelper</h3>
+    <p>The static helper class provides utility functions without needing a tracker instance:</p>
+    <div class="code-block">// Check if a skill's prerequisites are met
+// The valueProvider function returns the player's current value for each prerequisite code
+bool canLearn = SimpleSkillHelper.CheckAllPrerequisites(
+    fireball.Value,
+    (code) => GetPlayerSkillRank(code)  // your function that returns current rank
+);
+
+// Find all skills granted by a specific item
+SimpleSkillDefinition[] bookSkills = SimpleSkillHelper.FindSkillsGrantedByItem(
+    _skills, "TOME_OF_FIRE"
+);
+
+// Check if the player can afford the upgrade to the next rank
+bool canAfford = SimpleSkillHelper.CanAffordRankUp(
+    fireball.Value, currentRank,
+    (resourceCode) => GetPlayerResource(resourceCode)  // your resource lookup
+);</div>
+  </div>
+
+  <div class="section">
+    <h2 id="next-steps">Next Steps</h2>
+    <p>You have created your first skill database. Here is where to go from here:</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>Skill Forge Deep Dive</h4>
+        <p>Learn about all features: rank progression, prerequisites, cross-forge references, and the
+          two-level property system in detail.</p>
+        <p><a href="skill-forge.html">Skill Forge Documentation &rarr;</a></p>
+      </div>
+      <div class="feature-card">
+        <h4>Build Skill Trees</h4>
+        <p>Create talent trees with grid-based node layouts that reference your skills. Nodes have point costs,
+          level requirements, and parent-child connections.</p>
+        <p><a href="skill-tree-forge.html">Skill Tree Forge &rarr;</a></p>
+      </div>
+      <div class="feature-card">
+        <h4>Create Skill Sets</h4>
+        <p>Design loadout templates with typed slots and threshold-based set bonuses.
+          "Equip 3 fire skills for +20% fire damage."</p>
+        <p><a href="skill-set-forge.html">Skill Set Forge &rarr;</a></p>
+      </div>
+      <div class="feature-card">
+        <h4>Define Combos</h4>
+        <p>Build skill sequences with timing windows and threshold rewards.
+          "Fireball, Ice Bolt, Lightning within 2 seconds = Elemental Burst."</p>
+        <p><a href="skill-combo-forge.html">Skill Combo Forge &rarr;</a></p>
+      </div>
+      <div class="feature-card">
+        <h4>AI-Assisted Content</h4>
+        <p>Export your schema to JSON or Markdown, feed it to an AI assistant, and import hundreds of
+          generated skills back into your database.</p>
+        <p><a href="schema-export.html">AI Workflow &rarr;</a></p>
+      </div>
+      <div class="feature-card">
+        <h4>Cross-Forge Integration</h4>
+        <p>Connect to Simple Attribute Forge, Simple Item Forge, Simple Enemy Forge, and Simple Quest Forge
+          for deep cross-system references.</p>
+        <p><a href="integration.html">Integration &rarr;</a></p>
+      </div>
+    </div>
+  </div>
+
+    </main>
+  </div>
+
+  <div class="page-nav">
+    <a href="installation.html">&larr; Installation</a>
+    <a href="skill-forge.html">Skill Forge &rarr;</a>
+  </div>
+
+  <a href="#top" class="scroll-btn scroll-to-top" title="Scroll to top">&uarr;</a>
+
+</body>
+</html>

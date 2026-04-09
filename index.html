@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Skill Forge - Unity Skill Database Generator</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+  <div class="format-selector" id="top">
+    <span class="format-label">View Format:</span>
+    <a href="index.html" class="format-link active">Multi-Page</a>
+    <a href="single-page.html" class="format-link">Single Page</a>
+  </div>
+
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="quick-start.html">Quick Start</a></li>
+      <li><a href="skill-forge.html">Skill Forge</a></li>
+      <li><a href="skill-tree-forge.html">Skill Trees</a></li>
+      <li><a href="skill-set-forge.html">Skill Sets</a></li>
+      <li><a href="skill-combo-forge.html">Skill Combos</a></li>
+      <li><a href="schema-export.html">AI Workflow</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API Reference</a></li>
+      <li><a href="integration.html">Integration</a></li>
+      <li><a href="demos.html">Demos</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>Simple Skill Forge</h1>
+    <p class="tagline">Generate Complete Skill Databases, Skill Trees, Loadouts, and Combos in Minutes.</p>
+    <p style="color: #808080; font-size: 0.95em; margin-top: 8px;">
+      4 wizard-driven forges, 2 utility windows, 4 runtime trackers, and AI-assisted content generation.
+    </p>
+  </div>
+
+  <div class="page-layout">
+    <aside class="toc">
+      <h3>On This Page</h3>
+      <ul>
+        <li><a href="#build-your-skill-system">Build Your Skill System</a></li>
+        <li><a href="#why-simple-skill-forge">Why Simple Skill Forge?</a></li>
+        <li><a href="#the-four-forges">The Four Forges</a></li>
+        <li><a href="#utility-windows">Utility Windows</a></li>
+        <li><a href="#what-gets-generated">What Gets Generated</a></li>
+        <li><a href="#runtime-components">Runtime Components</a></li>
+        <li><a href="#getting-started">Getting Started</a></li>
+        <li><a href="#interconnected-ecosystem">Interconnected Ecosystem</a></li>
+      </ul>
+    </aside>
+    <main class="content">
+
+  <div class="section">
+    <h2 id="build-your-skill-system">Build Your Skill System</h2>
+    <p>Stop hand-coding skill databases and writing boilerplate ScriptableObject editors.
+      Simple Skill Forge gives you <strong>4 interconnected wizard tools</strong> that generate production-ready
+      databases with custom editors, type-safe enums, runtime trackers, and AI-assisted content generation &mdash; all from
+      a guided, step-by-step interface inside the Unity Editor.</p>
+    <p>Whether you are building an ARPG with hundreds of hand-crafted abilities, a MOBA with precise skill loadouts,
+      or a soulslike with deep talent trees, Simple Skill Forge handles the infrastructure
+      so you can focus on game design.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="why-simple-skill-forge">Why Simple Skill Forge?</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>Complete Package</h4>
+        <p>All 4 forges, all runtime components, all 6 genre templates, and full documentation included.
+          No hidden tiers, no premium upgrades, no paywalls. One purchase, everything included.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Two-Level Properties</h4>
+        <p>The Skill Forge defines dynamic properties at both <strong>skill-level AND rank-level</strong>.
+          Define Categories, Flags, Numerics, and Texts independently for skills and their individual ranks &mdash;
+          giving you unmatched flexibility without touching code.</p>
+      </div>
+      <div class="feature-card">
+        <h4>AI-First Design</h4>
+        <p>Schema export in 3 formats (Full JSON, Light JSON, Markdown) with embedded AI instructions for bulk
+          content generation. Export your schema, hand it to ChatGPT or Claude, and import hundreds of skills
+          back into your database in seconds.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Deep Cross-Forge Integration</h4>
+        <p>12 cross-forge reference fields connect skills to items (weapon requirements, reagent costs, crafted items),
+          enemies (summons, trainers, faction effectiveness), quests (unlock conditions, rewards), and
+          attributes (modifiers, class restrictions). All via safe reflection &mdash; zero hard dependencies.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Zero Dependencies</h4>
+        <p>Works standalone out of the box. Optional companion integrations with
+          <strong>Simple Attribute Forge</strong>, <strong>Simple Item Forge</strong>,
+          <strong>Simple Enemy Forge</strong>, and <strong>Simple Quest Forge</strong>
+          are detected and enabled automatically when installed.</p>
+      </div>
+      <div class="feature-card">
+        <h4>6 Genre Templates</h4>
+        <p>Start with pre-built property schemas for ARPG, MOBA, MMO, Turn-Based, Action, or Roguelike games.
+          Each template provides genre-appropriate Categories, Flags, Numerics, and Texts &mdash; customize
+          them freely or start from scratch.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 id="the-four-forges">The Four Forges</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>Skill Forge</h4>
+        <p>The main forge. Define skills with <strong>two-level dynamic properties</strong> (skill-level + rank-level),
+          multi-rank progression with upgrade costs, prerequisites, SAF modifier assets, and 12 cross-forge reference
+          fields for items, enemies, quests, and factions.</p>
+        <p><a href="skill-forge.html">Skill Forge Documentation &rarr;</a></p>
+      </div>
+      <div class="feature-card">
+        <h4>Skill Tree Forge</h4>
+        <p>Build talent trees with grid-based node layouts, parent-child connections, branch groups, point costs,
+          level requirements, and single-level dynamic properties. Nodes reference skills from any Skill Forge database.</p>
+        <p><a href="skill-tree-forge.html">Skill Tree Documentation &rarr;</a></p>
+      </div>
+      <div class="feature-card">
+        <h4>Skill Set Forge</h4>
+        <p>Create loadout templates with typed slots, skill assignments, and threshold-based set bonuses
+          (equip 3/5 for bonus effects). Supports SAF modifier assets on bonuses. Single-level properties.</p>
+        <p><a href="skill-set-forge.html">Skill Set Documentation &rarr;</a></p>
+      </div>
+      <div class="feature-card">
+        <h4>Skill Combo Forge</h4>
+        <p>Define skill sequences with ordered steps (required/optional), alternate skill choices, timing windows,
+          branch groups, and threshold rewards with modifier effects. Single-level properties.</p>
+        <p><a href="skill-combo-forge.html">Skill Combo Documentation &rarr;</a></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 id="utility-windows">Utility Windows</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>Database Export</h4>
+        <p>Export any generated database as clean JSON with resolved property names. Supports all 4 database types.
+          Ideal for AI workflows, data sharing, and backups.</p>
+        <p><code>Window &gt; Living Failure &gt; Simple Skill Forge &gt; Export Database</code></p>
+      </div>
+      <div class="feature-card">
+        <h4>Batch Icon Assignment</h4>
+        <p>Scan a sprite folder and auto-match sprites to skill/tree/set/combo codes by normalized filename.
+          Preview matches, manually override, and apply in one click.</p>
+        <p><code>Window &gt; Living Failure &gt; Simple Skill Forge &gt; Batch Icon Assignment</code></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 id="what-gets-generated">What Gets Generated</h2>
+    <p>Each forge generates 4 files per database:</p>
+    <table>
+      <tr>
+        <th>File</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td><code>{Prefix}Type.cs</code></td>
+        <td>Type-safe enum of all entry codes (e.g., <code>ARPGSkillsType.FIREBALL</code>)</td>
+      </tr>
+      <tr>
+        <td><code>{Prefix}Database.cs</code></td>
+        <td>ScriptableObject class implementing the forge's interface (e.g., <code>ISimpleSkillDataSource</code>)</td>
+      </tr>
+      <tr>
+        <td><code>{Prefix}DatabaseEditor.cs</code></td>
+        <td>Custom inspector that mirrors the wizard's builder UI with search, sort, filter, and pagination</td>
+      </tr>
+      <tr>
+        <td><code>{Prefix}Database.asset</code></td>
+        <td>The actual ScriptableObject instance with all your data baked in</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 id="runtime-components">Runtime Components</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>SimpleSkillHelper</h4>
+        <p>Static utility class for prerequisite checking, cross-reference queries, skill lookups by item/enemy/quest
+          code, and resource affordability checks.</p>
+      </div>
+      <div class="feature-card">
+        <h4>SimpleSkillTreeTracker</h4>
+        <p>Runtime state tracker for skill tree node unlocks. Tracks points spent, validates unlock requirements,
+          supports cascade reset, and provides event callbacks and serializable snapshots.</p>
+      </div>
+      <div class="feature-card">
+        <h4>SimpleSkillBarManager</h4>
+        <p>Runtime manager for skill set loadouts. Handles equip/unequip to typed slots, tracks threshold-based
+          set bonuses, and provides events and snapshots.</p>
+      </div>
+      <div class="feature-card">
+        <h4>SimpleSkillComboTracker</h4>
+        <p>Runtime tracker for active skill combos with timing windows. Tracks combo progress across all defined
+          combos simultaneously, fires events on progression/completion/drops, and awards threshold rewards.</p>
+      </div>
+    </div>
+    <p>Plus <strong>SimpleSkillComboEvaluator</strong> &mdash; a static utility for evaluating combo progress,
+      getting next valid skills, and checking timing windows without instantiating a tracker.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="getting-started">Getting Started</h2>
+    <div class="step-container">
+      <span class="step-number">1</span>
+      <strong>Install</strong> &mdash; Import from the Unity Asset Store or add via UPM.
+      See <a href="installation.html">Installation</a> for details.
+    </div>
+    <div class="step-container">
+      <span class="step-number">2</span>
+      <strong>Open a Forge</strong> &mdash; <code>Window &gt; Living Failure &gt; Simple Skill Forge &gt; Skill Forge</code>
+      (or Tree/Set/Combo Forge).
+    </div>
+    <div class="step-container">
+      <span class="step-number">3</span>
+      <strong>Choose a Template</strong> &mdash; Select a genre template (ARPG, MOBA, MMO, etc.) to pre-populate
+      property definitions, or start with None for a blank slate.
+    </div>
+    <div class="step-container">
+      <span class="step-number">4</span>
+      <strong>Define Properties</strong> &mdash; Customize your Categories, Flags, Numerics, and Texts at both
+      skill-level and rank-level (Skill Forge only &mdash; other forges use single-level).
+    </div>
+    <div class="step-container">
+      <span class="step-number">5</span>
+      <strong>Build Entries</strong> &mdash; Add skills, trees, sets, or combos using the split-panel builder
+      with search, sort, filter, and pagination.
+    </div>
+    <div class="step-container">
+      <span class="step-number">6</span>
+      <strong>Generate</strong> &mdash; Click Generate to produce your enum, database, custom editor, and
+      ScriptableObject asset. Assign the asset to your game systems.
+    </div>
+    <p>See <a href="quick-start.html">Quick Start</a> for a complete walkthrough.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="interconnected-ecosystem">Interconnected Ecosystem</h2>
+    <p>Simple Skill Forge is part of the <strong>Simple Forge Ecosystem</strong> &mdash; a family of Unity tools that work independently but become more powerful together:</p>
+    <table>
+      <tr>
+        <th>Package</th>
+        <th>What It Does</th>
+        <th>How It Connects to SSF</th>
+      </tr>
+      <tr>
+        <td><strong>Simple Attribute Forge</strong></td>
+        <td>Character stats, modifiers, and class templates</td>
+        <td>Modifier assets on skills/ranks/bonuses, attribute prerequisites, character class restrictions</td>
+      </tr>
+      <tr>
+        <td><strong>Simple Item Forge</strong></td>
+        <td>Items, loot tables, crafting, shops, item sets</td>
+        <td>Skill books, weapon requirements, reagent costs, produced items</td>
+      </tr>
+      <tr>
+        <td><strong>Simple Enemy Forge</strong></td>
+        <td>Enemies, factions, squads, spawns, waves</td>
+        <td>Summon skills, NPC trainers, learned-from enemies, faction effectiveness</td>
+      </tr>
+      <tr>
+        <td><strong>Simple Quest Forge</strong></td>
+        <td>Quests, quest chains, procedural quests</td>
+        <td>Quest-gated skill unlocks, quest-rewarded skills</td>
+      </tr>
+    </table>
+    <p>All integrations use <strong>safe reflection</strong> &mdash; no hard dependencies, no compile errors if
+      companion packages are not installed. Install them when you need them.</p>
+    <p>See <a href="integration.html">Integration</a> for details on each cross-forge connection.</p>
+  </div>
+
+    </main>
+  </div>
+
+  <div class="page-nav">
+    <span></span>
+    <a href="installation.html">Installation &rarr;</a>
+  </div>
+
+  <a href="#top" class="scroll-btn scroll-to-top" title="Scroll to top">&uarr;</a>
+
+</body>
+</html>

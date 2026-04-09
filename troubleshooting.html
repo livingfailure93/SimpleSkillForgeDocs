@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Troubleshooting - Simple Skill Forge</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="format-selector" id="top">
+    <span class="format-label">View Format:</span>
+    <a href="index.html" class="format-link active">Multi-Page</a>
+    <a href="single-page.html" class="format-link">Single Page</a>
+  </div>
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="quick-start.html">Quick Start</a></li>
+      <li><a href="skill-forge.html">Skill Forge</a></li>
+      <li><a href="skill-tree-forge.html">Skill Trees</a></li>
+      <li><a href="skill-set-forge.html">Skill Sets</a></li>
+      <li><a href="skill-combo-forge.html">Skill Combos</a></li>
+      <li><a href="schema-export.html">AI Workflow</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API Reference</a></li>
+      <li><a href="integration.html">Integration</a></li>
+      <li><a href="demos.html">Demos</a></li>
+      <li><a href="troubleshooting.html" class="active">Troubleshooting</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>Simple Skill Forge</h1>
+    <p class="tagline">Generate Complete Skill Databases, Skill Trees, Loadouts, and Combos in Minutes.</p>
+  </div>
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> / Troubleshooting
+  </div>
+
+  <div class="page-layout">
+    <aside class="toc">
+      <h3>On This Page</h3>
+      <ul>
+        <li><a href="#generation-issues">Generation Issues</a></li>
+        <li><a href="#editor-issues">Editor Issues</a></li>
+        <li><a href="#runtime-issues">Runtime Issues</a></li>
+        <li><a href="#integration-issues">Integration Issues</a></li>
+        <li><a href="#demo-issues">Demo Scene Issues</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </aside>
+    <main class="content">
+
+  <div class="section">
+    <h1>Troubleshooting</h1>
+    <p>Common issues and their solutions when working with Simple Skill Forge.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="generation-issues">Generation Issues</h2>
+
+    <h3>"Generation seems stuck" / Nothing happens after clicking Generate</h3>
+    <p>Simple Skill Forge uses <strong>two-phase generation</strong>. Phase 1 generates C# scripts, which triggers
+      a Unity domain reload (recompilation). Phase 2 runs automatically after the reload to create the
+      ScriptableObject asset. This process can take 5&ndash;30 seconds depending on your project size.</p>
+    <div class="warning">If the wizard window closes during domain reload, reopen it from the menu. The generation
+      will resume automatically via <code>[InitializeOnLoad]</code>.</div>
+
+    <h3>"The generated .asset file is empty"</h3>
+    <p>This typically means Phase 2 failed. Check the Console for errors. Common causes:</p>
+    <ul>
+      <li>A compile error in your project prevented the domain reload from completing.</li>
+      <li>The <code>SessionState</code> keys were lost (rare, usually caused by a Unity crash during generation).</li>
+    </ul>
+    <p><strong>Fix:</strong> Delete the generated <code>Scripts/</code> folder, fix any compile errors, and re-run the wizard.</p>
+
+    <h3>"Duplicate code" validation error</h3>
+    <p>Every entry code must be unique within a database and must be a valid C# identifier (letters, digits,
+      underscores; cannot start with a digit). Use SCREAMING_SNAKE_CASE for consistency:
+      <code>FIREBALL</code>, <code>DARK_SLASH</code>, <code>HEAL_OVER_TIME</code>.</p>
+
+    <h3>"Output path does not exist"</h3>
+    <p>The output folder must exist before generation. Create it manually in your Assets folder, or use the
+      Browse button in Step 4 to select an existing folder.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="editor-issues">Editor Issues</h2>
+
+    <h3>The generated custom inspector shows "Element 0, Element 1" instead of property names</h3>
+    <p>This can happen if the database was generated with an older version of the editor generator. Re-run the
+      wizard to regenerate the editor script.</p>
+
+    <h3>Cross-forge sections (SIF/SEF/SQF) appear in the inspector even without companion packages</h3>
+    <p>The generated editor uses <code>Type.GetType()</code> bridge checks to gate cross-forge sections.
+      If sections appear without the companion package installed, regenerate the database &mdash; the editor
+      generator has been updated to include proper bridge detection.</p>
+
+    <h3>Property definitions changed but entries are out of sync</h3>
+    <p>When you add/remove/reorder property definitions in Step 2, the wizard automatically syncs all entries.
+      However, if you modify the generated database asset manually, the sync won't apply. Use the wizard
+      for all structural changes.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="runtime-issues">Runtime Issues</h2>
+
+    <h3>SimpleSkillTreeTracker throws "Tree not initialized"</h3>
+    <p>Call <code>InitializeTree(treeCode)</code> for each tree before attempting to unlock nodes or query state.
+      The tracker does not auto-initialize &mdash; this is intentional so you can control which trees are active.</p>
+
+    <h3>SimpleSkillBarManager set bonuses not activating</h3>
+    <p>Set bonuses require the correct number of <strong>distinct</strong> skills equipped. Equipping the same skill
+      in multiple slots does not count multiple times. Check <code>GetEquippedCount(setCode)</code> to verify.</p>
+
+    <h3>SimpleSkillComboTracker drops combos unexpectedly</h3>
+    <p>Combos have timing windows defined by <code>maxDelay</code> on each step. If you cast skills too slowly,
+      the combo will drop. Set <code>maxDelay</code> to 0 to disable timing for a step. Also ensure you're
+      passing consistent <code>Time.time</code> values to <code>OnSkillUsed()</code>.</p>
+
+    <h3>Prerequisite checks always return false</h3>
+    <p><code>SimpleSkillHelper.CheckPrerequisite()</code> requires a <code>Func&lt;string, float&gt;</code> value
+      provider that returns the current value for any prerequisite target code. Common mistake: the provider
+      returns 0 for all codes because it doesn't check the right dictionary.</p>
+    <div class="code-block">// Example value provider for skill ranks
+bool met = SimpleSkillHelper.CheckPrerequisite(prereq, code => {
+    if (skillRanks.ContainsKey(code)) return skillRanks[code];
+    if (code == "Level") return playerLevel;
+    return 0f;
+});</div>
+  </div>
+
+  <div class="section">
+    <h2 id="integration-issues">Integration Issues</h2>
+
+    <h3>SAF/SIF/SEF/SQF bridge not detecting installed package</h3>
+    <p>Bridge detection uses two paths:</p>
+    <ol>
+      <li><strong>UPM path:</strong> <code>versionDefines</code> in <code>.asmdef</code> files detect packages by
+        <code>com.livingfailure.*</code> package name and set scripting defines automatically.</li>
+      <li><strong>Non-UPM path:</strong> <code>[InitializeOnLoad]</code> detector classes use
+        <code>Type.GetType()</code> to probe for companion types and set scripting defines manually.</li>
+    </ol>
+    <p>If detection fails, check that the companion package's <code>.asmdef</code> files are present and correctly
+      named. For Asset Store imports, ensure the folder structure matches the expected layout.</p>
+
+    <h3>Character class restrictions not showing in the wizard</h3>
+    <p>Class names come from SAF Character Template assets assigned in Step 1. If you don't have SAF installed
+      or haven't assigned any character template assets, the class restriction section will be empty. You can
+      still manually type class names in the builder.</p>
+
+    <h3>Cross-forge reference dropdowns are empty</h3>
+    <p>Cross-forge dropdowns in Step 3 are populated from linked databases assigned in Step 1. If you haven't
+      assigned any SIF/SEF/SQF databases, the dropdowns will only show manual code entry fields.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="demo-issues">Demo Scene Issues</h2>
+
+    <h3>ARPG Demo: "Assign all databases to SkillDemo component"</h3>
+    <p>After running <code>Window &gt; Living Failure &gt; Simple Skill Forge &gt; Generate Skill Demo</code>,
+      you need to manually assign your generated database ScriptableObjects to the SkillDemo component in the
+      Inspector. Drag your Skill, Tree, Set, and Combo database assets into the corresponding array fields.</p>
+
+    <h3>Soulslike Demo: Shows upsell panel instead of main UI</h3>
+    <p>The Soulslike demo requires all 4 companion packages (SAF, SIF, SEF, SQF) to be installed. If any are
+      missing, it shows an upsell panel explaining what's needed. Install the missing packages and re-enter
+      Play mode.</p>
+
+    <h3>Soulslike Demo: "forceShowUpsell" is checked</h3>
+    <p>The SoulslikeSkillDemo component has a debug toggle <code>forceShowUpsell</code>. Uncheck it in the
+      Inspector to show the main UI even when all bridges are detected.</p>
+
+    <h3>Demo scroll views don't scroll</h3>
+    <p>Ensure the EventSystem exists in the scene. The generator creates one automatically, but if you deleted
+      it, scrolling won't work. Add <code>GameObject &gt; UI &gt; Event System</code>.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="faq">FAQ</h2>
+
+    <h3>Can I have multiple skill databases in one project?</h3>
+    <p>Yes. Run the wizard multiple times with different database names. Each run generates its own enum, database
+      class, and editor. At runtime, cast each ScriptableObject to <code>ISimpleSkillDataSource</code> and merge
+      or query them independently.</p>
+
+    <h3>Can I modify the generated database asset in the Inspector?</h3>
+    <p>Yes. The generated custom editor provides a full split-panel builder with search, sort, filter, and
+      pagination &mdash; identical to the wizard's Step 3. You can add, remove, edit, and duplicate entries
+      directly in the Inspector without reopening the wizard.</p>
+
+    <h3>Does SSF support multiplayer / networking?</h3>
+    <p>SSF generates data assets and provides runtime state trackers. The trackers (SimpleSkillTreeTracker,
+      SimpleSkillBarManager, SimpleSkillComboTracker) are pure C# classes with snapshot serialization. You can
+      serialize their state via <code>CreateSnapshot()</code> / <code>RestoreFromSnapshot()</code> for network
+      sync, save/load, or undo/redo.</p>
+
+    <h3>What's the performance impact?</h3>
+    <p>Generated databases are standard Unity ScriptableObjects with struct arrays. All runtime lookups use
+      linear scans over small arrays (typical game databases have 50&ndash;500 entries). The trackers use
+      dictionaries for O(1) state lookups. There are no per-frame allocations in normal usage.</p>
+
+    <h3>Can I use SSF with Addressables / Asset Bundles?</h3>
+    <p>Yes. The generated database is a standard ScriptableObject and works with any Unity asset loading system.
+      Cast the loaded asset to the appropriate interface at runtime.</p>
+  </div>
+
+    </main>
+  </div>
+
+  <div class="page-nav">
+    <a href="demos.html">&larr; Demos</a>
+    <a href="about.html">About &rarr;</a>
+  </div>
+
+  <a href="#top" class="scroll-btn scroll-to-top" title="Scroll to top">&uarr;</a>
+
+</body>
+</html>

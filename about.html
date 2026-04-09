@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - Simple Skill Forge</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="format-selector" id="top">
+    <span class="format-label">View Format:</span>
+    <a href="index.html" class="format-link active">Multi-Page</a>
+    <a href="single-page.html" class="format-link">Single Page</a>
+  </div>
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="quick-start.html">Quick Start</a></li>
+      <li><a href="skill-forge.html">Skill Forge</a></li>
+      <li><a href="skill-tree-forge.html">Skill Trees</a></li>
+      <li><a href="skill-set-forge.html">Skill Sets</a></li>
+      <li><a href="skill-combo-forge.html">Skill Combos</a></li>
+      <li><a href="schema-export.html">AI Workflow</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API Reference</a></li>
+      <li><a href="integration.html">Integration</a></li>
+      <li><a href="demos.html">Demos</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>Simple Skill Forge</h1>
+    <p class="tagline">Generate Complete Skill Databases, Skill Trees, Loadouts, and Combos in Minutes.</p>
+  </div>
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> / About
+  </div>
+
+  <div class="page-layout">
+    <aside class="toc">
+      <h3>On This Page</h3>
+      <ul>
+        <li><a href="#design-philosophy">Design Philosophy</a></li>
+        <li><a href="#the-forge-ecosystem">The Forge Ecosystem</a></li>
+        <li><a href="#what-gets-generated">What Gets Generated</a></li>
+        <li><a href="#companion-products">Companion Products</a></li>
+        <li><a href="#version-history">Version History</a></li>
+        <li><a href="#support">Support</a></li>
+      </ul>
+    </aside>
+    <main class="content">
+
+  <div class="section">
+    <h1>About Simple Skill Forge</h1>
+    <p>Simple Skill Forge is a Unity Editor tool for creating ScriptableObject-based skill
+      databases using a wizard-driven workflow. It follows the same proven architecture as Simple Enemy Forge,
+      Simple Item Forge, and Simple Quest Forge &mdash; dynamic property systems, two-phase code generation,
+      schema export/import for AI-assisted content creation, and optional integration bridges via safe reflection.</p>
+
+    <p>Whether you're building a small indie RPG or a large-scale MMO, Simple Skill Forge adapts to your game's
+      needs. You define the properties that matter to <em>your</em> game (there are no hardcoded "Mana Cost" or
+      "Cooldown" fields), and the tool generates production-ready code and data assets from your design.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="design-philosophy">Design Philosophy</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>Two-Level Properties</h4>
+        <p>The Skill Forge defines dynamic properties at both <strong>skill-level</strong> AND
+          <strong>rank-level</strong>. A skill can have "Element" and "Skill Type" while each of its ranks
+          independently tracks "Damage Multiplier" and "Cast Time". The other three forges (Tree, Set, Combo)
+          use single-level properties.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Dynamic, Not Hardcoded</h4>
+        <p>There are no built-in "Mana Cost" or "Cooldown" fields. You define your own property schema
+          using four property types: Categories (dropdowns), Flags (booleans), Numerics (numbers), and
+          Texts (strings). A MOBA might need "Lane Phase" and "Team Fight Impact". A roguelike might
+          need "Synergy Tag" and "Stack Limit". Your game, your properties, your rules.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Four Tools, One Ecosystem</h4>
+        <p>Skill Forge defines individual skills with ranks and cross-forge references. Skill Tree Forge
+          organizes them into unlockable talent grids. Skill Set Forge groups them into loadouts with
+          set bonuses. Skill Combo Forge chains them into timed sequences with rewards. Together they
+          cover every aspect of a skill system.</p>
+      </div>
+      <div class="feature-card">
+        <h4>AI-First Content Pipeline</h4>
+        <p>All four wizards support schema export in 3 formats (Full JSON, Light JSON, Markdown) with
+          detailed AI instructions embedded in the export. Define your schema once, let AI generate hundreds
+          of skills, then import the results &mdash; all without writing a line of code.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 id="the-forge-ecosystem">The Forge Ecosystem</h2>
+    <p>Simple Skill Forge is part of the <strong>Simple Forge Ecosystem</strong>, a family of Unity
+      Editor tools that share a common architecture:</p>
+    <table>
+      <tr><th>Package</th><th>Forges</th><th>Runtime Components</th></tr>
+      <tr>
+        <td><strong>Simple Attribute Forge</strong></td>
+        <td>Attribute Forge, Modifier System, Character Templates</td>
+        <td>Runtime attributes, modifier tracker, formula calculator</td>
+      </tr>
+      <tr>
+        <td><strong>Simple Item Forge</strong></td>
+        <td>Item Forge, Loot Forge, Crafting Forge, Shop Forge</td>
+        <td>Loot roller, crafting evaluator, shop manager</td>
+      </tr>
+      <tr>
+        <td><strong>Simple Enemy Forge</strong></td>
+        <td>Enemy, Squad, Spawn, Scaling, Wave, Behavior, Faction Forges</td>
+        <td>Spawn roller, wave runner, scaling helper, faction helper</td>
+      </tr>
+      <tr>
+        <td><strong>Simple Quest Forge</strong></td>
+        <td>Quest Forge, Quest Chain Forge, Procedural Quest Forge</td>
+        <td>Quest tracker, chain tracker, procedural generator</td>
+      </tr>
+      <tr>
+        <td><strong>Simple Skill Forge</strong></td>
+        <td>Skill Forge, Skill Tree Forge, Skill Set Forge, Skill Combo Forge</td>
+        <td>Tree tracker, bar manager, combo tracker, combo evaluator</td>
+      </tr>
+    </table>
+    <p>Every package in the ecosystem follows the same 5-step wizard pattern, uses the same dynamic property system,
+      generates the same output structure (enum + database + editor + asset), and supports the same AI schema
+      export/import workflow.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="what-gets-generated">What Gets Generated</h2>
+    <p>Each forge generates 4 files per database run:</p>
+    <div class="file-tree"><span class="folder">Generated/</span>
+  <span class="folder">ARPG/</span>
+    <span class="folder">Skills/</span>
+      <span class="folder">Scripts/</span>
+        <span class="cs-file">ARPGSkillsType.cs</span>          &larr; Enum of all skill codes
+        <span class="cs-file">ARPGSkillsDatabase.cs</span>      &larr; ScriptableObject implementing ISimpleSkillDataSource
+        <span class="folder">Editor/</span>
+          <span class="cs-file">ARPGSkillsDatabaseEditor.cs</span>  &larr; Custom inspector with split-panel builder
+      ARPGSkillsDatabase.asset              &larr; The actual data asset</div>
+    <p>The generated database implements the corresponding interface (<code>ISimpleSkillDataSource</code>,
+      <code>ISimpleSkillTreeDataSource</code>, <code>ISimpleSkillSetDataSource</code>, or
+      <code>ISimpleSkillComboDataSource</code>), so your game code only depends on the interface &mdash;
+      never on the generated class name.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="companion-products">Companion Products</h2>
+    <p>Simple Skill Forge optionally integrates with these companion packages via safe reflection. No hard
+      dependencies &mdash; install them only when you need them:</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>Simple Attribute Forge (SAF)</h4>
+        <p>Enables modifier asset references on skills, ranks, and set bonuses. Provides attribute names for
+          prerequisites and character class templates for class restrictions on all 4 forge types.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Simple Item Forge (SIF)</h4>
+        <p>Enables skill-item relationships: skill books (grantedByItemCode), weapon requirements
+          (requiredEquipmentCode), produced items (producesItemCode), and reagent costs per cast.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Simple Enemy Forge (SEF)</h4>
+        <p>Enables skill-enemy relationships: summon skills (summonEnemyCode), NPC trainers (taughtByNPCCode),
+          learned-from enemies (learnedFromEnemyCode), faction effectiveness, and faction restrictions.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Simple Quest Forge (SQF)</h4>
+        <p>Enables skill-quest relationships: quest-gated unlocks (unlockedByQuestCode) and quest-rewarded
+          skills (rewardedByQuestCodes).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 id="version-history">Version History</h2>
+    <table>
+      <tr><th>Version</th><th>Date</th><th>Changes</th></tr>
+      <tr>
+        <td><strong>1.0.0</strong></td>
+        <td>2025</td>
+        <td>Initial release. 4 forges, 6 genre templates, 4 runtime trackers, cross-forge integration
+          (SAF/SIF/SEF/SQF), AI schema export/import, character class restrictions, 2 demo scenes
+          (ARPG + Soulslike), database export window, batch icon assignment.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 id="support">Support</h2>
+    <p>Simple Skill Forge is developed and maintained by <strong>Living Failure</strong>.</p>
+    <table>
+      <tr><td><strong>Publisher</strong></td><td><a href="https://assetstore.unity.com/publishers/61332">Living Failure on Unity Asset Store</a></td></tr>
+      <tr><td><strong>Email</strong></td><td>livingfailuregames@gmail.com</td></tr>
+      <tr><td><strong>Unity Version</strong></td><td>2021.3+</td></tr>
+      <tr><td><strong>Package Name</strong></td><td><code>com.livingfailure.simple-skill-forge</code></td></tr>
+    </table>
+    <p>Found a bug? Have a feature request? Email us or leave a review on the Asset Store page.</p>
+  </div>
+
+    </main>
+  </div>
+
+  <div class="page-nav">
+    <a href="troubleshooting.html">&larr; Troubleshooting</a>
+    <span></span>
+  </div>
+
+  <a href="#top" class="scroll-btn scroll-to-top" title="Scroll to top">&uarr;</a>
+
+</body>
+</html>

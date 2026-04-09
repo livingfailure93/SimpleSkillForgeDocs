@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Combo Forge - Simple Skill Forge</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+  <div class="format-selector" id="top">
+    <span class="format-label">View Format:</span>
+    <a href="index.html" class="format-link active">Multi-Page</a>
+    <a href="single-page.html" class="format-link">Single Page</a>
+  </div>
+
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="quick-start.html">Quick Start</a></li>
+      <li><a href="skill-forge.html">Skill Forge</a></li>
+      <li><a href="skill-tree-forge.html">Skill Trees</a></li>
+      <li><a href="skill-set-forge.html">Skill Sets</a></li>
+      <li><a href="skill-combo-forge.html" class="active">Skill Combos</a></li>
+      <li><a href="schema-export.html">AI Workflow</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API Reference</a></li>
+      <li><a href="integration.html">Integration</a></li>
+      <li><a href="demos.html">Demos</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>Simple Skill Forge</h1>
+    <p class="tagline">Generate Complete Skill Databases, Skill Trees, Loadouts, and Combos in Minutes.</p>
+  </div>
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> / Skill Combo Forge
+  </div>
+
+  <div class="page-layout">
+    <aside class="toc">
+      <h3>On This Page</h3>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#the-5-step-wizard">The 5-Step Wizard</a></li>
+        <li><a href="#steps">Steps</a></li>
+        <li><a href="#rewards">Rewards</a></li>
+        <li><a href="#single-level-properties">Single-Level Properties</a></li>
+        <li><a href="#runtime-tracker">Runtime: SimpleSkillComboTracker</a></li>
+        <li><a href="#runtime-evaluator">Runtime: SimpleSkillComboEvaluator</a></li>
+      </ul>
+    </aside>
+    <main class="content">
+
+  <div class="section">
+    <h2 id="overview">Overview</h2>
+    <p>The <strong>Skill Combo Forge</strong> generates skill combo databases &mdash; sequential skill
+      chains where players execute skills in a specific order to earn threshold-based rewards. Each combo
+      defines ordered <strong>steps</strong> with timing windows, alternate skill choices, and branch groups,
+      plus <strong>rewards</strong> that trigger at step count thresholds.</p>
+
+    <p>Generated databases implement <code>ISimpleSkillComboDataSource</code> and produce the standard 4-file
+      output with the suffix <code>Combo</code> (e.g., <code>ARPGComboType.cs</code>,
+      <code>ARPGComboDatabase.cs</code>).</p>
+
+    <p>Open the Skill Combo Forge wizard from the Unity menu:</p>
+    <div class="code-block">Window &gt; Living Failure &gt; Simple Skill Forge &gt; Skill Combo Forge</div>
+
+    <p>Key features:</p>
+    <ul>
+      <li>Ordered steps with <code>sortOrder</code> sequencing</li>
+      <li>Required and optional steps</li>
+      <li>Alternate skill choices per step (<code>alternateSkillCodes[]</code>)</li>
+      <li>Branch groups for OR-alternative step paths</li>
+      <li>Per-step timing windows (<code>maxDelay</code> in seconds)</li>
+      <li>Threshold-based rewards with SAF modifier assets</li>
+      <li>Single-level dynamic properties on each combo</li>
+      <li>Runtime tracker for automatic combo detection and progression</li>
+      <li>Static evaluator for stateless combo analysis</li>
+      <li>Character class restrictions via SAF Character Templates</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2 id="the-5-step-wizard">The 5-Step Wizard</h2>
+    <p>The Skill Combo Forge follows the same 5-step wizard pattern as all forges.</p>
+
+    <h3>Step 1: Setup</h3>
+    <p>Configure the database name, namespace, class prefix, and template. Link Skill Forge database
+      assets for searchable skill code dropdowns in Step 3. Link SAF Character Template assets for
+      class restriction support.</p>
+
+    <h3>Step 2: Definitions</h3>
+    <p>Define <strong>single-level</strong> dynamic properties for your combos (e.g., "Combo Type",
+      "Element", "Damage Multiplier", "Is Finisher"). JSON schema export/import with context-aware
+      usage hints and 5 combo design patterns (Chain Combo, Rotation, Reaction Chain, Hit String,
+      Synergy Set).</p>
+
+    <h3>Step 3: Builder</h3>
+    <p>Split-panel editor (280px left panel). The right panel shows foldout sections for:</p>
+    <ul>
+      <li><strong>Identity</strong> &mdash; code, display name, description, icon</li>
+      <li><strong>Categories / Flags / Numerics / Texts</strong> &mdash; single-level properties</li>
+      <li><strong>Steps</strong> &mdash; ReorderableList with 6 fields per step (skillCode, isRequired,
+        alternateSkillCodes mini-list, branchGroup, maxDelay, sortOrder)</li>
+      <li><strong>Rewards</strong> &mdash; ReorderableList with threshold count, description, effect code,
+        and SAF modifier assets</li>
+      <li><strong>Character Class Restrictions</strong> &mdash; allowed character classes</li>
+    </ul>
+
+    <h3>Step 4: Settings</h3>
+    <p>Output paths, custom paths toggle, generation toggles, and file preview.</p>
+
+    <h3>Step 5: Generate</h3>
+    <p>Two-phase generation producing <code>{Prefix}ComboType.cs</code>,
+      <code>{Prefix}ComboDatabase.cs</code>, <code>{Prefix}ComboDatabaseEditor.cs</code>, and the
+      <code>.asset</code> file with all step, reward, and modifier data baked in.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="steps">Steps</h2>
+    <p>Each combo contains an array of <code>SimpleSkillComboStep</code> structs, sorted by
+      <code>sortOrder</code> at runtime. A step defines a single position in the combo sequence.</p>
+
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td><code>skillCode</code></td>
+        <td><code>string</code></td>
+        <td>Primary skill code that satisfies this step</td>
+      </tr>
+      <tr>
+        <td><code>isRequired</code></td>
+        <td><code>bool</code></td>
+        <td>Whether this step must be hit or can be skipped. Optional steps are
+          automatically skipped if the player uses a skill matching a later required step.</td>
+      </tr>
+      <tr>
+        <td><code>alternateSkillCodes[]</code></td>
+        <td><code>string[]</code></td>
+        <td>Additional skill codes that also satisfy this step. Any of these (or the
+          primary <code>skillCode</code>) will advance the combo.</td>
+      </tr>
+      <tr>
+        <td><code>branchGroup</code></td>
+        <td><code>string</code></td>
+        <td>Steps in the same branch group are OR alternatives &mdash; only one needs to
+          be completed. Empty = no branch group.</td>
+      </tr>
+      <tr>
+        <td><code>maxDelay</code></td>
+        <td><code>float</code></td>
+        <td>Maximum seconds allowed before the next step must be hit. If the player waits
+          longer, the combo drops. 0 = no time limit.</td>
+      </tr>
+      <tr>
+        <td><code>sortOrder</code></td>
+        <td><code>int</code></td>
+        <td>Determines the execution order of steps within the combo. Lower values go first.
+          Steps are sorted by this field at runtime.</td>
+      </tr>
+    </table>
+
+    <h3>Querying Steps</h3>
+    <div class="code-block">// Get all steps for a combo
+SimpleSkillComboStep[] steps = database.GetStepsForCombo("ELEMENTAL_BURST");
+
+// Convenience accessors on the combo struct
+int stepCount = combo.StepCount;
+SimpleSkillComboStep? step = combo.GetStepByIndex(0);
+
+// Check if the combo contains a specific skill (primary or alternates)
+bool hasFireball = combo.ContainsSkill("FIREBALL");
+
+// Get all unique skill codes from all steps
+string[] allSkills = combo.GetAllSkillCodes();
+
+// Find steps that match a specific skill code
+SimpleSkillComboStep[] matching = combo.FindStepsBySkillCode("FIREBALL");
+
+// Find all combos containing a skill
+SimpleSkillComboDefinition[] combosWithFireball =
+    database.FindCombosContainingSkill("FIREBALL");
+
+// Find combos whose first step matches a skill
+SimpleSkillComboDefinition[] combosStarting =
+    database.FindCombosStartingWith("SLASH");</div>
+
+    <h3>Example: Elemental Burst Combo</h3>
+    <table>
+      <tr>
+        <th>Sort Order</th>
+        <th>Skill Code</th>
+        <th>Required</th>
+        <th>Alternates</th>
+        <th>Max Delay</th>
+      </tr>
+      <tr>
+        <td>0</td>
+        <td>FIREBALL</td>
+        <td>Yes</td>
+        <td>&mdash;</td>
+        <td>0 (no limit)</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>ICE_BOLT</td>
+        <td>Yes</td>
+        <td>FROST_NOVA</td>
+        <td>2.0 sec</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>LIGHTNING_STRIKE</td>
+        <td>Yes</td>
+        <td>&mdash;</td>
+        <td>2.0 sec</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>ARCANE_BLAST</td>
+        <td>No (optional)</td>
+        <td>&mdash;</td>
+        <td>3.0 sec</td>
+      </tr>
+    </table>
+    <p>The player must cast Fireball, then Ice Bolt (or Frost Nova) within 2 seconds, then Lightning
+      Strike within 2 more seconds. The optional Arcane Blast at the end earns a bonus reward if hit
+      within 3 seconds but is not required for combo completion.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="rewards">Rewards</h2>
+    <p>Each combo can have multiple <code>SimpleSkillComboReward</code> entries that trigger when enough
+      steps are completed. This follows the same threshold pattern as set bonuses.</p>
+
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td><code>requiredSteps</code></td>
+        <td><code>int</code></td>
+        <td>Number of completed steps required to earn this reward</td>
+      </tr>
+      <tr>
+        <td><code>rewardDescription</code></td>
+        <td><code>string</code></td>
+        <td>Human-readable description (e.g., "Elemental Overload: +50% elemental damage for 5s")</td>
+      </tr>
+      <tr>
+        <td><code>effectCode</code></td>
+        <td><code>string</code></td>
+        <td>Game-specific effect identifier for your code to interpret</td>
+      </tr>
+      <tr>
+        <td><code>modifiers[]</code></td>
+        <td><code>ScriptableObject[]</code></td>
+        <td>SAF modifier assets applied when this reward triggers</td>
+      </tr>
+    </table>
+
+    <h3>Querying Rewards</h3>
+    <div class="code-block">// Get all rewards for a combo
+SimpleSkillComboReward[] rewards = database.GetRewardsForCombo("ELEMENTAL_BURST");
+
+// Convenience accessors on the combo struct
+int rewardCount = combo.RewardCount;
+
+// Get all rewards active at a given step count (stacking)
+SimpleSkillComboReward[] active = combo.GetActiveRewards(completedStepCount: 3);</div>
+
+    <h3>Example: Tiered Rewards</h3>
+    <table>
+      <tr>
+        <th>Required Steps</th>
+        <th>Reward</th>
+        <th>Effect Code</th>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Elemental Resonance: +20% elemental damage for 3s</td>
+        <td>ELEM_RESONANCE</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Elemental Overload: +50% elemental damage for 5s, AoE explosion</td>
+        <td>ELEM_OVERLOAD</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Elemental Mastery: Full elemental damage for 8s, reset all cooldowns</td>
+        <td>ELEM_MASTERY</td>
+      </tr>
+    </table>
+    <p>Each tier stacks &mdash; completing 3 steps earns both the 2-step and 3-step rewards.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="single-level-properties">Single-Level Properties</h2>
+    <p>Skill combos use <strong>single-level</strong> dynamic properties on the combo definition itself.</p>
+
+    <div class="code-block">// Access combo-level properties
+int comboType = combo.GetCategoryValue(0);
+bool isFinisher = combo.GetFlagValue(0);
+float damageMultiplier = combo.GetNumericValue(0);
+string description = combo.GetTextValue(0);
+
+// Get property definition labels
+string[] catLabels = database.GetCategoryLabels();     // e.g., ["Combo Type", "Element"]
+string[] catEntries = database.GetCategoryEntries(0);  // e.g., ["Chain", "Rotation", "Reaction"]
+string[] flagNames = database.GetFlagNames();          // e.g., ["Is Finisher", "Requires Airborne"]
+string[] numNames = database.GetNumericNames();        // e.g., ["Damage Multiplier", "Cooldown Reduction"]
+string[] textNames = database.GetTextNames();          // e.g., ["Combo Description", "Flavor Text"]
+
+// Filter combos by property values
+SimpleSkillComboDefinition[] chains = database.GetCombosByCategory(0, 0);
+SimpleSkillComboDefinition[] finishers = database.GetCombosByFlag(0, true);
+SimpleSkillComboDefinition[] highDamage = database.GetCombosByNumericRange(0, 1.5f, 10f);</div>
+  </div>
+
+  <div class="section">
+    <h2 id="runtime-tracker">Runtime: SimpleSkillComboTracker</h2>
+    <p><code>SimpleSkillComboTracker</code> tracks active skill combos at runtime. Feed skill usage
+      into the tracker and it automatically evaluates all defined combos simultaneously &mdash; starting
+      new combos when a matching first step is detected, progressing active combos on subsequent matches,
+      dropping combos when timing windows expire, and triggering rewards at thresholds.</p>
+
+    <h3>Setup</h3>
+    <div class="code-block">// Create a tracker from your combo database
+var tracker = new SimpleSkillComboTracker(comboDatabase);</div>
+
+    <h3>Feeding Skill Usage</h3>
+    <div class="code-block">// Call OnSkillUsed whenever the player casts a skill
+// The tracker evaluates ALL combos simultaneously
+tracker.OnSkillUsed("SLASH", Time.time);
+tracker.OnSkillUsed("UPPERCUT", Time.time);
+tracker.OnSkillUsed("SLAM", Time.time);</div>
+    <p>Each call to <code>OnSkillUsed</code> does the following:</p>
+    <ul>
+      <li>Checks timing windows on all active combos (drops expired ones)</li>
+      <li>Advances active combos if the skill matches their next step</li>
+      <li>Skips optional steps when the skill matches a later required step</li>
+      <li>Triggers rewards when step thresholds are reached</li>
+      <li>Completes combos when all steps are matched</li>
+      <li>Starts new combos if the skill matches any inactive combo's first step</li>
+    </ul>
+
+    <h3>Queries</h3>
+    <div class="code-block">// Get all active combo states
+SimpleActiveComboState[] active = tracker.GetActiveComboStates();
+
+// Get the number of active combos
+int count = tracker.GetActiveComboCount();
+
+// Check if a specific combo is active
+bool isActive = tracker.IsComboActive("ELEMENTAL_BURST");
+
+// Get completion progress (0 to 1)
+float progress = tracker.GetComboProgress("ELEMENTAL_BURST");
+
+// Manually drop a combo
+tracker.DropCombo("ELEMENTAL_BURST");
+
+// Drop all active combos
+tracker.DropAllCombos();</div>
+
+    <h3>Events</h3>
+    <div class="code-block">tracker.OnComboStarted += (comboCode) =&gt;
+    Debug.Log($"Combo started: {comboCode}");
+
+tracker.OnComboProgressed += (comboCode, currentStep, totalSteps) =&gt;
+    Debug.Log($"Combo {comboCode}: {currentStep}/{totalSteps}");
+
+tracker.OnComboCompleted += (comboCode) =&gt;
+    Debug.Log($"Combo complete: {comboCode}");
+
+tracker.OnComboDropped += (comboCode, reason) =&gt;
+    Debug.Log($"Combo dropped: {comboCode} ({reason})");
+
+tracker.OnRewardTriggered += (comboCode, rewardIndex) =&gt;
+    Debug.Log($"Reward {rewardIndex} triggered in {comboCode}");</div>
+
+    <h3>Snapshots (Save/Load)</h3>
+    <div class="code-block">// Save current state (including mid-combo progress)
+SimpleComboTrackerSnapshot snapshot = tracker.CreateSnapshot();
+string json = JsonUtility.ToJson(snapshot);
+
+// Load state
+var loaded = JsonUtility.FromJson&lt;SimpleComboTrackerSnapshot&gt;(json);
+tracker.RestoreFromSnapshot(loaded);</div>
+  </div>
+
+  <div class="section">
+    <h2 id="runtime-evaluator">Runtime: SimpleSkillComboEvaluator</h2>
+    <p><code>SimpleSkillComboEvaluator</code> is a <strong>static utility class</strong> for evaluating
+      combos without instantiating a tracker. All methods are stateless pure functions &mdash; useful for
+      UI previews, combo planning, AI decision-making, and tooltip generation.</p>
+
+    <h3>Evaluating a Combo</h3>
+    <div class="code-block">// Evaluate how well a sequence of skills matches a combo
+string[] usedSkills = { "FIREBALL", "ICE_BOLT", "LIGHTNING_STRIKE" };
+ComboEvalResult result = SimpleSkillComboEvaluator.EvaluateCombo(combo, usedSkills);
+
+// Result fields:
+result.matchedStepCount;     // 3
+result.totalStepCount;       // 4
+result.completionPercentage; // 0.75
+result.isComplete;           // false
+result.nextValidSkillCodes;  // ["ARCANE_BLAST"] (what to cast next)</div>
+
+    <h3>Getting Next Valid Skills</h3>
+    <div class="code-block">// Get skills that would advance the combo from a given position
+string[] nextSkills = SimpleSkillComboEvaluator.GetNextValidSkills(combo, completedStepCount: 2);
+// Returns the primary skillCode + all alternateSkillCodes for step at index 2</div>
+    <p>This is especially useful for UI hints ("Cast one of these skills to continue the combo")
+      and AI skill selection.</p>
+
+    <h3>Finding Matching Combos</h3>
+    <div class="code-block">// Find all combos that partially or fully match a recent skill sequence
+string[] recentSkills = { "SLASH", "UPPERCUT" };
+ComboMatch[] matches = SimpleSkillComboEvaluator.FindMatchingCombos(comboDatabase, recentSkills);
+
+foreach (var match in matches)
+{
+    Debug.Log($"{match.comboCode}: {match.matchedSteps}/{match.totalSteps}" +
+              (match.isComplete ? " COMPLETE" : ""));
+}</div>
+
+    <h3>Quick Checks</h3>
+    <div class="code-block">// Check if a combo is fully complete
+bool complete = SimpleSkillComboEvaluator.IsComboComplete(combo, usedSkills);
+
+// Get completion progress (0 to 1)
+float progress = SimpleSkillComboEvaluator.GetComboProgress(combo, usedSkills);
+
+// Get active rewards for a step count
+SimpleSkillComboReward[] rewards =
+    SimpleSkillComboEvaluator.GetActiveRewards(combo, completedStepCount: 3);</div>
+
+    <h3>Tracker vs. Evaluator</h3>
+    <table>
+      <tr>
+        <th>Feature</th>
+        <th>SimpleSkillComboTracker</th>
+        <th>SimpleSkillComboEvaluator</th>
+      </tr>
+      <tr>
+        <td>Type</td>
+        <td>Instance class (stateful)</td>
+        <td>Static class (stateless)</td>
+      </tr>
+      <tr>
+        <td>Tracks multiple combos simultaneously</td>
+        <td>Yes</td>
+        <td>No (one-at-a-time evaluation)</td>
+      </tr>
+      <tr>
+        <td>Timing windows</td>
+        <td>Yes (automatic drop on expiry)</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>Events</td>
+        <td>Yes (started, progressed, completed, dropped, reward)</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>Snapshots</td>
+        <td>Yes (save/load)</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>Use case</td>
+        <td>Live gameplay combo tracking</td>
+        <td>UI previews, tooltips, AI planning</td>
+      </tr>
+    </table>
+  </div>
+
+    </main>
+  </div>
+
+  <div class="page-nav">
+    <a href="skill-set-forge.html">&larr; Skill Sets</a>
+    <a href="schema-export.html">AI Workflow &rarr;</a>
+  </div>
+
+  <a href="#top" class="scroll-btn scroll-to-top" title="Scroll to top">&uarr;</a>
+
+</body>
+</html>

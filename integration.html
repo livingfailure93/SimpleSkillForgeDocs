@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integration - Simple Skill Forge</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="format-selector" id="top">
+    <span class="format-label">View Format:</span>
+    <a href="index.html" class="format-link active">Multi-Page</a>
+    <a href="single-page.html" class="format-link">Single Page</a>
+  </div>
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="quick-start.html">Quick Start</a></li>
+      <li><a href="skill-forge.html">Skill Forge</a></li>
+      <li><a href="skill-tree-forge.html">Skill Trees</a></li>
+      <li><a href="skill-set-forge.html">Skill Sets</a></li>
+      <li><a href="skill-combo-forge.html">Skill Combos</a></li>
+      <li><a href="schema-export.html">AI Workflow</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API Reference</a></li>
+      <li><a href="integration.html" class="active">Integration</a></li>
+      <li><a href="demos.html">Demos</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>Simple Skill Forge</h1>
+    <p class="tagline">Generate Complete Skill Databases, Skill Trees, Loadouts, and Combos in Minutes.</p>
+  </div>
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> / Integration
+  </div>
+
+  <div class="page-layout">
+    <aside class="toc">
+      <h3>On This Page</h3>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#how-bridges-work">How Bridges Work</a></li>
+        <li><a href="#saf-integration">SAF Integration</a></li>
+        <li><a href="#sif-integration">SIF Integration</a></li>
+        <li><a href="#sef-integration">SEF Integration</a></li>
+        <li><a href="#sqf-integration">SQF Integration</a></li>
+        <li><a href="#character-classes">Character Classes</a></li>
+      </ul>
+    </aside>
+    <main class="content">
+
+  <div class="section">
+    <h1 id="overview">Cross-Forge Integration</h1>
+    <p>Simple Skill Forge integrates with 4 companion packages from the Simple Forge Ecosystem. All integrations
+      use <strong>safe reflection</strong> &mdash; no hard dependencies, no compile errors, no <code>#if</code>
+      preprocessor directives. Install companion packages when you need them; SSF adapts automatically.</p>
+    <table>
+      <tr><th>Package</th><th>Package ID</th><th>What SSF Gets</th></tr>
+      <tr>
+        <td><strong>Simple Attribute Forge</strong></td>
+        <td><code>com.livingfailure.simple-attribute-forge</code></td>
+        <td>Modifier assets on skills/ranks/bonuses, character class restrictions</td>
+      </tr>
+      <tr>
+        <td><strong>Simple Item Forge</strong></td>
+        <td><code>com.livingfailure.simple-item-forge</code></td>
+        <td>4 skill-item reference fields + reagent costs</td>
+      </tr>
+      <tr>
+        <td><strong>Simple Enemy Forge</strong></td>
+        <td><code>com.livingfailure.simple-enemy-forge</code></td>
+        <td>5 skill-enemy/faction reference fields</td>
+      </tr>
+      <tr>
+        <td><strong>Simple Quest Forge</strong></td>
+        <td><code>com.livingfailure.simple-quest-forge</code></td>
+        <td>2 skill-quest reference fields</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 id="how-bridges-work">How Bridges Work</h2>
+    <p>SSF uses two detection paths:</p>
+
+    <h3>1. UPM Detection (Automatic)</h3>
+    <p>The <code>.asmdef</code> files contain <code>versionDefines</code> that detect companion packages by
+      their UPM package name and set scripting defines automatically:</p>
+    <div class="code-block">"versionDefines": [
+  { "name": "com.livingfailure.simple-attribute-forge", "expression": "", "define": "SIMPLE_ATTRIBUTE_FORGE" },
+  { "name": "com.livingfailure.simple-item-forge", "expression": "", "define": "SIMPLE_ITEM_FORGE" },
+  { "name": "com.livingfailure.simple-enemy-forge", "expression": "", "define": "SIMPLE_ENEMY_FORGE" },
+  { "name": "com.livingfailure.simple-quest-forge", "expression": "", "define": "SIMPLE_QUEST_FORGE" }
+]</div>
+
+    <h3>2. Reflection Detection (Fallback)</h3>
+    <p>For non-UPM installs (Asset Store, .unitypackage), bridge classes use <code>Type.GetType()</code> to
+      probe for companion types at editor time. Each bridge is a static class that caches type references and
+      builds delegate-based accessors:</p>
+    <div class="code-block">// Example: SIFBridge probes for item data source
+var type = Type.GetType("SimpleItemForge.ISimpleItemDataSource, SimpleItemForge.Runtime");
+if (type != null) {
+    IsAvailable = true;
+    GetItemCodes = (db) => (string[])type.GetMethod("GetItemCodes").Invoke(db, null);
+}</div>
+    <p>At <strong>runtime</strong>, the demo scenes use <code>FindType()</code> (scanning all loaded assemblies)
+      instead of <code>Type.GetType()</code> with assembly-qualified names, since assembly names may vary
+      between UPM and Asset Store installs.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="saf-integration">Simple Attribute Forge (SAF)</h2>
+    <p>When SAF is detected, the following features become available:</p>
+
+    <h3>Modifier Assets</h3>
+    <p>The Skill Forge builder (Step 3) shows a <strong>Skill Modifiers</strong> section where you can assign
+      <code>SimpleModifierAssetBase</code> ScriptableObjects to skills. Each rank can also have its own modifier
+      assets. The Skill Set Forge allows modifiers on set bonuses.</p>
+
+    <h3>Character Class Restrictions</h3>
+    <p>When SAF Character Templates are detected, all 4 forges show an <strong>Allowed Character Classes</strong>
+      section. You can assign character template assets in Step 1, and the builder provides checkbox toggles
+      for each detected class name plus a manual entry list.</p>
+    <p>At runtime, each definition struct has <code>allowedCharacterClasses</code> (string[]) with
+      <code>HasClassRestriction</code> and <code>IsUsableByClass()</code> / <code>IsAvailableToClass()</code>
+      accessors. The interfaces provide <code>GetSkillsForClass()</code> and <code>GetSkillsUsableByClass()</code>
+      query methods.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="sif-integration">Simple Item Forge (SIF)</h2>
+    <p>When SIF is detected, the Skill Forge builder shows 4 cross-forge reference fields plus reagent costs:</p>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Purpose</th><th>Example</th></tr>
+      <tr>
+        <td><code>grantedByItemCode</code></td><td>string</td>
+        <td>Item that teaches/grants this skill</td>
+        <td>Skill books, scrolls, equipment passives, gem sockets</td>
+      </tr>
+      <tr>
+        <td><code>requiredEquipmentCode</code></td><td>string</td>
+        <td>Item that must be equipped to use this skill</td>
+        <td>Bow for arrow skills, staff for magic, specific weapon types</td>
+      </tr>
+      <tr>
+        <td><code>producesItemCode</code></td><td>string</td>
+        <td>Item created when skill is used</td>
+        <td>Conjure food, crafting skills, transmutation, gathering yields</td>
+      </tr>
+      <tr>
+        <td><code>reagentCosts[]</code></td><td>SimpleSkillReagentCost[]</td>
+        <td>Items consumed per cast</td>
+        <td>Arrows, soul shards, catalysts, reagents</td>
+      </tr>
+    </table>
+    <div class="info"><strong>Note:</strong> Reagent costs are different from <code>SimpleSkillUpgradeCost</code>
+      (which defines costs to level up a skill rank). Reagents are consumed every time the skill is cast.</div>
+
+    <h3>Runtime Queries</h3>
+    <div class="code-block">// Find all skills that require a specific item equipped
+var bowSkills = db.GetSkillsRequiringEquipment("LONGBOW");
+
+// Find all skills that consume a specific reagent
+var arrowSkills = db.GetSkillsConsumingReagent("IRON_ARROW");</div>
+  </div>
+
+  <div class="section">
+    <h2 id="sef-integration">Simple Enemy Forge (SEF)</h2>
+    <p>When SEF is detected, the Skill Forge builder shows 5 cross-forge reference fields:</p>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Purpose</th><th>Example</th></tr>
+      <tr>
+        <td><code>summonEnemyCode</code></td><td>string</td>
+        <td>Enemy summoned by this skill</td>
+        <td>Necromancer minions, pet classes, conjured creatures</td>
+      </tr>
+      <tr>
+        <td><code>learnedFromEnemyCode</code></td><td>string</td>
+        <td>Enemy that teaches this skill</td>
+        <td>Blue Mage skills, Enemy Skill materia, monster absorption</td>
+      </tr>
+      <tr>
+        <td><code>taughtByNPCCode</code></td><td>string</td>
+        <td>NPC trainer that teaches this skill</td>
+        <td>Class trainers, weapon masters, move tutors</td>
+      </tr>
+      <tr>
+        <td><code>effectiveAgainstFactions[]</code></td><td>string[]</td>
+        <td>Factions this skill is strong against</td>
+        <td>Holy vs Undead, Dragon Slayer vs Dragons, type advantages</td>
+      </tr>
+      <tr>
+        <td><code>restrictedToFactionCode</code></td><td>string</td>
+        <td>Only characters of this faction can use the skill</td>
+        <td>Racial abilities, covenant skills, guild techniques</td>
+      </tr>
+    </table>
+    <div class="info">In SEF, NPCs are represented as enemy definitions. The <code>taughtByNPCCode</code> field
+      references an enemy code from the SEF database.</div>
+
+    <h3>Runtime Queries</h3>
+    <div class="code-block">// Find all skills learned from a specific enemy
+var blueSkills = db.GetSkillsLearnedFromEnemy("FIRE_DRAGON");
+
+// Find all skills effective against a faction
+var antiUndead = db.GetSkillsEffectiveAgainstFaction("UNDEAD");</div>
+  </div>
+
+  <div class="section">
+    <h2 id="sqf-integration">Simple Quest Forge (SQF)</h2>
+    <p>When SQF is detected, the Skill Forge builder shows 2 cross-forge reference fields:</p>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Purpose</th><th>Example</th></tr>
+      <tr>
+        <td><code>unlockedByQuestCode</code></td><td>string</td>
+        <td>Quest that must be completed to learn this skill</td>
+        <td>Class quests, weapon art quests, mastery trials</td>
+      </tr>
+      <tr>
+        <td><code>rewardedByQuestCodes[]</code></td><td>string[]</td>
+        <td>Quests that award this skill as a reward</td>
+        <td>Reverse lookup: "Learned from: The Archmage's Trial"</td>
+      </tr>
+    </table>
+
+    <h3>Runtime Queries</h3>
+    <div class="code-block">// Find all skills unlocked by completing a quest
+var questSkills = db.GetSkillsUnlockedByQuest("ARCHMAGE_TRIAL");
+
+// Find all skills rewarded by a quest
+var rewards = db.GetSkillsRewardedByQuest("DRAGON_SLAYER_QUEST");</div>
+  </div>
+
+  <div class="section">
+    <h2 id="character-classes">Character Class System</h2>
+    <p>All 4 forge types (Skill, Tree, Set, Combo) support <code>allowedCharacterClasses</code> on their
+      definition structs. This feature is enabled when SAF Character Templates are detected, but can also
+      be used manually by typing class names directly.</p>
+
+    <h3>How It Works</h3>
+    <ul>
+      <li>In Step 1, assign Character Template assets to populate available class names</li>
+      <li>In Step 3 (builder), toggle classes on/off per entry or type custom names</li>
+      <li>An empty <code>allowedCharacterClasses</code> array means the entry is <strong>unrestricted</strong>
+        (usable by all classes)</li>
+      <li>A non-empty array means the entry is <strong>restricted</strong> to listed classes only</li>
+    </ul>
+
+    <h3>Runtime API</h3>
+    <div class="code-block">// Check if a skill has class restrictions
+if (skill.HasClassRestriction)
+    Debug.Log($"Restricted to: {string.Join(", ", skill.allowedCharacterClasses)}");
+
+// Check if a specific class can use a skill
+bool canUse = skill.IsUsableByClass("Warrior");
+
+// Query: get all skills usable by a class (restricted to that class + unrestricted)
+var warriorSkills = db.GetSkillsUsableByClass("Warrior");
+
+// Same pattern works for trees, sets, and combos
+var warriorTrees = treeDb.GetTreesAvailableToClass("Warrior");
+var warriorSets = setDb.GetSetsAvailableToClass("Warrior");
+var warriorCombos = comboDb.GetCombosAvailableToClass("Warrior");</div>
+  </div>
+
+    </main>
+  </div>
+
+  <div class="page-nav">
+    <a href="api-reference.html">&larr; API Reference</a>
+    <a href="demos.html">Demos &rarr;</a>
+  </div>
+
+  <a href="#top" class="scroll-btn scroll-to-top" title="Scroll to top">&uarr;</a>
+
+</body>
+</html>

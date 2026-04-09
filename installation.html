@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Installation - Simple Skill Forge</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+  <div class="format-selector" id="top">
+    <span class="format-label">View Format:</span>
+    <a href="index.html" class="format-link active">Multi-Page</a>
+    <a href="single-page.html" class="format-link">Single Page</a>
+  </div>
+
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="installation.html" class="active">Installation</a></li>
+      <li><a href="quick-start.html">Quick Start</a></li>
+      <li><a href="skill-forge.html">Skill Forge</a></li>
+      <li><a href="skill-tree-forge.html">Skill Trees</a></li>
+      <li><a href="skill-set-forge.html">Skill Sets</a></li>
+      <li><a href="skill-combo-forge.html">Skill Combos</a></li>
+      <li><a href="schema-export.html">AI Workflow</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API Reference</a></li>
+      <li><a href="integration.html">Integration</a></li>
+      <li><a href="demos.html">Demos</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>Simple Skill Forge</h1>
+    <p class="tagline">Generate Complete Skill Databases, Skill Trees, Loadouts, and Combos in Minutes.</p>
+  </div>
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> / Installation
+  </div>
+
+  <div class="page-layout">
+    <aside class="toc">
+      <h3>On This Page</h3>
+      <ul>
+        <li><a href="#package-manager">Package Manager (UPM)</a></li>
+        <li><a href="#asset-store">Asset Store</a></li>
+        <li><a href="#manual-import">Manual Import</a></li>
+        <li><a href="#verifying-installation">Verifying Installation</a></li>
+        <li><a href="#optional-companions">Optional Companions</a></li>
+        <li><a href="#assembly-definitions">Assembly Definitions</a></li>
+      </ul>
+    </aside>
+    <main class="content">
+
+  <div class="section">
+    <h2 id="package-manager">Package Manager (UPM)</h2>
+    <p>The recommended way to install Simple Skill Forge is through Unity's Package Manager using a Git URL.
+      This approach makes updates easy and keeps the package outside your Assets folder.</p>
+
+    <h3>Option A &mdash; Git URL</h3>
+    <div class="step-container">
+      <span class="step-number">1</span>
+      Open <strong>Window &gt; Package Manager</strong> in the Unity Editor.
+    </div>
+    <div class="step-container">
+      <span class="step-number">2</span>
+      Click the <strong>+</strong> button in the top-left corner and select <strong>Add package from git URL...</strong>
+    </div>
+    <div class="step-container">
+      <span class="step-number">3</span>
+      Enter the repository URL:
+      <div class="code-block">https://github.com/LivingFailure/com.livingfailure.simple-skill-forge.git</div>
+    </div>
+    <div class="step-container">
+      <span class="step-number">4</span>
+      Click <strong>Add</strong>. Unity will download and import the package automatically.
+    </div>
+
+    <h3>Option B &mdash; manifest.json</h3>
+    <p>You can also add the package directly to your project's <code>Packages/manifest.json</code> file:</p>
+    <div class="code-block">{
+  "dependencies": {
+    "com.livingfailure.simple-skill-forge": "https://github.com/LivingFailure/com.livingfailure.simple-skill-forge.git",
+    ...
+  }
+}</div>
+    <p>Save the file and return to Unity. The package will be resolved automatically.</p>
+
+    <div class="info">
+      <strong>Tip:</strong> To lock to a specific version, append <code>#v1.0.0</code> (or any tag/branch) to the Git URL.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 id="asset-store">Asset Store</h2>
+    <p>Simple Skill Forge is available on the Unity Asset Store.</p>
+
+    <div class="step-container">
+      <span class="step-number">1</span>
+      Open the <strong>Unity Asset Store</strong> in your browser or the Unity Editor
+      (<strong>Window &gt; Asset Store</strong>).
+    </div>
+    <div class="step-container">
+      <span class="step-number">2</span>
+      Search for <strong>"Simple Skill Forge"</strong> by Living Failure.
+    </div>
+    <div class="step-container">
+      <span class="step-number">3</span>
+      Click <strong>Add to My Assets</strong>, then open <strong>Window &gt; Package Manager</strong>,
+      switch to <strong>My Assets</strong>, find Simple Skill Forge, and click <strong>Import</strong>.
+    </div>
+    <div class="step-container">
+      <span class="step-number">4</span>
+      In the Import dialog, ensure all files are selected and click <strong>Import</strong>.
+    </div>
+
+    <p>The package will be placed under <code>Assets/SimpleSkillForge/</code>.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="manual-import">Manual Import</h2>
+    <p>If you received Simple Skill Forge as a <code>.unitypackage</code> file:</p>
+
+    <div class="step-container">
+      <span class="step-number">1</span>
+      In Unity, go to <strong>Assets &gt; Import Package &gt; Custom Package...</strong>
+    </div>
+    <div class="step-container">
+      <span class="step-number">2</span>
+      Navigate to the <code>.unitypackage</code> file and select it.
+    </div>
+    <div class="step-container">
+      <span class="step-number">3</span>
+      In the Import dialog, ensure all files are checked and click <strong>Import</strong>.
+    </div>
+
+    <div class="warning">
+      <strong>Important:</strong> Do not move or rename the assembly definition (<code>.asmdef</code>) files after import.
+      They define the <code>SimpleSkillForge.Runtime</code> and <code>SimpleSkillForge.Editor</code> assemblies
+      and must remain in their original locations for compilation to succeed.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 id="verifying-installation">Verifying Installation</h2>
+    <p>After installation, verify that everything is working correctly:</p>
+
+    <div class="step-container">
+      <span class="step-number">1</span>
+      <strong>Check the menu:</strong> Open <code>Window &gt; Living Failure &gt; Simple Skill Forge</code>.
+      You should see 4 forge entries: <strong>Skill Forge</strong>, <strong>Skill Tree Forge</strong>,
+      <strong>Skill Set Forge</strong>, and <strong>Skill Combo Forge</strong>, plus the utility windows.
+    </div>
+    <div class="step-container">
+      <span class="step-number">2</span>
+      <strong>Open a forge:</strong> Click <strong>Skill Forge</strong>. The wizard window should appear
+      with Step 1 (Setup) displayed. If you see the database name field, template dropdown, and
+      linked database sections, the installation is correct.
+    </div>
+    <div class="step-container">
+      <span class="step-number">3</span>
+      <strong>Check the console:</strong> Look for any compilation errors in the Unity Console
+      (<code>Window &gt; General &gt; Console</code>). A clean installation produces zero errors.
+    </div>
+
+    <div class="success">
+      <strong>Success:</strong> If all 4 forge windows open without errors, Simple Skill Forge is installed correctly.
+    </div>
+
+    <p>If you encounter issues, see <a href="troubleshooting.html">Troubleshooting</a>.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="optional-companions">Optional Companions</h2>
+    <p>Simple Skill Forge works standalone with zero dependencies. However, it integrates with 4 companion
+      packages from the Simple Forge Ecosystem. When a companion is detected, SSF automatically
+      enables additional features via safe reflection &mdash; no configuration required.</p>
+
+    <table>
+      <tr>
+        <th>Package</th>
+        <th>UPM Name</th>
+        <th>What It Unlocks in SSF</th>
+      </tr>
+      <tr>
+        <td><strong>Simple Attribute Forge</strong></td>
+        <td><code>com.livingfailure.simple-attribute-forge</code></td>
+        <td>Modifier assets on skills, ranks, and set bonuses. Attribute names for prerequisites.
+          Character class restrictions via Character Template integration.</td>
+      </tr>
+      <tr>
+        <td><strong>Simple Item Forge</strong></td>
+        <td><code>com.livingfailure.simple-item-forge</code></td>
+        <td>Item-skill relationships: skill books (<code>grantedByItemCode</code>), weapon requirements
+          (<code>requiredEquipmentCode</code>), crafted items (<code>producesItemCode</code>), and
+          reagent costs (<code>reagentCosts[]</code>).</td>
+      </tr>
+      <tr>
+        <td><strong>Simple Enemy Forge</strong></td>
+        <td><code>com.livingfailure.simple-enemy-forge</code></td>
+        <td>Enemy-skill relationships: summon skills (<code>summonEnemyCode</code>), NPC trainers
+          (<code>taughtByNPCCode</code>), learned-from enemies (<code>learnedFromEnemyCode</code>),
+          faction effectiveness (<code>effectiveAgainstFactions[]</code>), and faction restrictions
+          (<code>restrictedToFactionCode</code>).</td>
+      </tr>
+      <tr>
+        <td><strong>Simple Quest Forge</strong></td>
+        <td><code>com.livingfailure.simple-quest-forge</code></td>
+        <td>Quest-skill relationships: quest-gated unlocks (<code>unlockedByQuestCode</code>) and
+          quest-rewarded skills (<code>rewardedByQuestCodes[]</code>).</td>
+      </tr>
+    </table>
+
+    <h3>Installing Companions</h3>
+    <p>Install companion packages the same way you installed SSF (UPM, Asset Store, or manual import).
+      Once imported, SSF detects them automatically on the next domain reload. No restart or manual
+      configuration is needed.</p>
+
+    <h3>Detection Mechanism</h3>
+    <p>SSF uses two detection methods that work together:</p>
+    <ul>
+      <li><strong>UPM detection:</strong> The <code>.asmdef</code> files contain <code>versionDefines</code> entries
+        that set scripting defines (e.g., <code>SIMPLE_ATTRIBUTE_FORGE</code>, <code>SIMPLE_ITEM_FORGE</code>)
+        when companion packages are present in the Package Manager.</li>
+      <li><strong>Reflection detection:</strong> Bridge classes (<code>SAFBridge</code>, <code>SIFBridge</code>,
+        <code>SEFBridge</code>, <code>SQFBridge</code>) probe for companion types at runtime using
+        <code>Type.GetType()</code>. This handles non-UPM installations (Asset Store, manual import).</li>
+    </ul>
+
+    <div class="info">
+      <strong>Note:</strong> You can install and remove companions at any time. SSF gracefully disables
+      features when a companion is removed &mdash; no compile errors, no data loss. Cross-forge reference
+      fields simply become manual text entry instead of searchable dropdowns.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 id="assembly-definitions">Assembly Definitions</h2>
+    <p>Simple Skill Forge uses two assembly definitions to keep runtime and editor code properly separated:</p>
+
+    <table>
+      <tr>
+        <th>Assembly</th>
+        <th>Namespace</th>
+        <th>Contents</th>
+      </tr>
+      <tr>
+        <td><code>SimpleSkillForge.Runtime</code></td>
+        <td><code>SimpleSkillForge</code></td>
+        <td>All runtime types: definitions (skill, tree, set, combo), interfaces
+          (<code>ISimpleSkillDataSource</code>, etc.), helpers, trackers, evaluators, bridges</td>
+      </tr>
+      <tr>
+        <td><code>SimpleSkillForge.Editor</code></td>
+        <td><code>SimpleSkillForge.Editor</code></td>
+        <td>All editor types: wizard windows, wizard steps, wizard data, code generators,
+          templates, schema export, utility windows</td>
+      </tr>
+    </table>
+
+    <h3>Referencing SSF in Your Code</h3>
+    <p>If your project uses assembly definitions, add a reference to <code>SimpleSkillForge.Runtime</code>
+      in your runtime <code>.asmdef</code> to access SSF types:</p>
+    <div class="code-block">{
+  "name": "MyGame.Runtime",
+  "references": [
+    "SimpleSkillForge.Runtime"
+  ]
+}</div>
+
+    <p>For editor scripts that need SSF editor types, reference both assemblies:</p>
+    <div class="code-block">{
+  "name": "MyGame.Editor",
+  "references": [
+    "SimpleSkillForge.Runtime",
+    "SimpleSkillForge.Editor"
+  ]
+}</div>
+
+    <h3>Version Defines</h3>
+    <p>The runtime assembly's <code>.asmdef</code> includes <code>versionDefines</code> for all companion packages.
+      When a companion is installed via UPM, Unity automatically sets the corresponding scripting define symbol:</p>
+    <table>
+      <tr>
+        <th>Companion Package</th>
+        <th>Define Symbol</th>
+      </tr>
+      <tr>
+        <td><code>com.livingfailure.simple-attribute-forge</code></td>
+        <td><code>SIMPLE_ATTRIBUTE_FORGE</code></td>
+      </tr>
+      <tr>
+        <td><code>com.livingfailure.simple-item-forge</code></td>
+        <td><code>SIMPLE_ITEM_FORGE</code></td>
+      </tr>
+      <tr>
+        <td><code>com.livingfailure.simple-enemy-forge</code></td>
+        <td><code>SIMPLE_ENEMY_FORGE</code></td>
+      </tr>
+      <tr>
+        <td><code>com.livingfailure.simple-quest-forge</code></td>
+        <td><code>SIMPLE_QUEST_FORGE</code></td>
+      </tr>
+    </table>
+    <p>These defines gate <code>#if</code> blocks in SSF source code so that companion-specific features
+      compile only when the companion is present.</p>
+  </div>
+
+    </main>
+  </div>
+
+  <div class="page-nav">
+    <a href="index.html">&larr; Home</a>
+    <a href="quick-start.html">Quick Start &rarr;</a>
+  </div>
+
+  <a href="#top" class="scroll-btn scroll-to-top" title="Scroll to top">&uarr;</a>
+
+</body>
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Forge - Simple Skill Forge</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+  <div class="format-selector" id="top">
+    <span class="format-label">View Format:</span>
+    <a href="index.html" class="format-link active">Multi-Page</a>
+    <a href="single-page.html" class="format-link">Single Page</a>
+  </div>
+
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="quick-start.html">Quick Start</a></li>
+      <li><a href="skill-forge.html" class="active">Skill Forge</a></li>
+      <li><a href="skill-tree-forge.html">Skill Trees</a></li>
+      <li><a href="skill-set-forge.html">Skill Sets</a></li>
+      <li><a href="skill-combo-forge.html">Skill Combos</a></li>
+      <li><a href="schema-export.html">AI Workflow</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API Reference</a></li>
+      <li><a href="integration.html">Integration</a></li>
+      <li><a href="demos.html">Demos</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>Simple Skill Forge</h1>
+    <p class="tagline">Generate Complete Skill Databases, Skill Trees, Loadouts, and Combos in Minutes.</p>
+  </div>
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> / Skill Forge
+  </div>
+
+  <div class="page-layout">
+    <aside class="toc">
+      <h3>On This Page</h3>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#the-5-step-wizard">The 5-Step Wizard</a></li>
+        <li><a href="#property-types">Property Types</a></li>
+        <li><a href="#ranks-and-upgrade-costs">Ranks and Upgrade Costs</a></li>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#cross-forge-references">Cross-Forge References</a></li>
+        <li><a href="#character-class-restrictions">Character Class Restrictions</a></li>
+      </ul>
+    </aside>
+    <main class="content">
+
+  <div class="section">
+    <h2 id="overview">Overview</h2>
+    <p>The <strong>Skill Forge</strong> is the primary forge in Simple Skill Forge. It generates complete
+      skill databases as ScriptableObjects with type-safe enums, custom inspectors, and a runtime interface
+      (<code>ISimpleSkillDataSource</code>) for querying skill data from game code.</p>
+
+    <p>What makes the Skill Forge unique among the four forges is its <strong>two-level dynamic property
+      system</strong>. You define properties at two independent levels:</p>
+    <ul>
+      <li><strong>Skill-Level Properties (Level 1)</strong> &mdash; apply to the skill as a whole.
+        Examples: Skill Type, Element, Is Passive, Mana Cost, Tooltip.</li>
+      <li><strong>Rank-Level Properties (Level 2)</strong> &mdash; apply to each individual rank within a skill.
+        Examples: Damage, Healing Amount, Area of Effect, Duration.</li>
+    </ul>
+
+    <p>On top of the two-level property system, each skill supports:</p>
+    <ul>
+      <li><strong>Multi-rank progression</strong> with per-rank upgrade costs and SAF modifier assets</li>
+      <li><strong>Prerequisites</strong> for skill unlock conditions</li>
+      <li><strong>12 cross-forge reference fields</strong> linking skills to items (SIF), enemies (SEF),
+        quests (SQF), and attributes/modifiers (SAF)</li>
+      <li><strong>Character class restrictions</strong> via SAF Character Templates</li>
+    </ul>
+
+    <p>Open the Skill Forge wizard from the Unity menu:</p>
+    <div class="code-block">Window &gt; Living Failure &gt; Simple Skill Forge &gt; Skill Forge</div>
+  </div>
+
+  <div class="section">
+    <h2 id="the-5-step-wizard">The 5-Step Wizard</h2>
+    <p>The Skill Forge follows the standard 5-step wizard pattern shared across all Living Failure forges.</p>
+
+    <h3>Step 1: Setup</h3>
+    <p>Configure the foundational settings for your skill database:</p>
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td><strong>Database Name</strong></td>
+        <td>The name prefix for all generated files (e.g., <code>ARPGSkills</code> generates
+          <code>ARPGSkillsType.cs</code>, <code>ARPGSkillsDatabase.cs</code>, etc.)</td>
+      </tr>
+      <tr>
+        <td><strong>Namespace</strong></td>
+        <td>Optional C# namespace for generated code. Leave blank if your project does not use namespaces.</td>
+      </tr>
+      <tr>
+        <td><strong>Class Prefix</strong></td>
+        <td>Optional prefix for generated class names. Defaults to the database name.</td>
+      </tr>
+      <tr>
+        <td><strong>Template</strong></td>
+        <td>Genre template (ARPG, MOBA, MMO, TurnBased, Action, Roguelike, or None) to pre-populate
+          property definitions at both skill-level and rank-level.</td>
+      </tr>
+      <tr>
+        <td><strong>Linked Databases</strong></td>
+        <td>Drag-and-drop ScriptableObject database assets from companion forges (SAF, SIF, SEF, SQF)
+          to enable searchable dropdowns for cross-forge reference fields in Step 3. Also supports
+          SAF Character Template assets for class restrictions.</td>
+      </tr>
+    </table>
+
+    <div class="info">
+      <strong>Template selection:</strong> When you choose a template, it populates Step 2 with genre-appropriate
+      property definitions. Selecting <strong>None</strong> clears all existing definitions (with a
+      confirmation dialog). You can always modify template-provided definitions freely.
+    </div>
+
+    <h3>Step 2: Definitions</h3>
+    <p>Define the dynamic property schema for your skills. This is where the <strong>two-level system</strong>
+      comes into play. You define properties separately for:</p>
+    <ul>
+      <li><strong>Skill-Level</strong> &mdash; Categories, Flags, Numerics, and Texts that apply to the
+        skill as a whole</li>
+      <li><strong>Rank-Level</strong> &mdash; Categories, Flags, Numerics, and Texts that apply to each
+        individual rank</li>
+    </ul>
+
+    <p>Each property type is managed via a ReorderableList. Add, remove, reorder, and configure properties
+      with full control. All existing skill entries are automatically synced when definitions change.</p>
+
+    <p>Step 2 also includes a <strong>JSON Schema</strong> section for AI-assisted content generation.
+      Export your schema in 3 formats (Full JSON, Light JSON, Markdown) and import skills from JSON.
+      See <a href="schema-export.html">AI Workflow</a> for details.</p>
+
+    <h3>Step 3: Builder</h3>
+    <p>The builder is a split-panel editor for creating and editing individual skills.</p>
+
+    <p><strong>Left Panel</strong> &mdash; a scrollable list of all skills with:</p>
+    <ul>
+      <li>Search bar (filter by name or code)</li>
+      <li>Category filter dropdown</li>
+      <li>Sort options (alphabetical, by code, by category)</li>
+      <li>Pagination for large lists</li>
+      <li>Bulk select, delete, and duplicate</li>
+      <li>Category type indicator badge (<code>[TypeName]</code>)</li>
+      <li>+ / - buttons for adding and removing skills</li>
+    </ul>
+
+    <p><strong>Right Panel</strong> &mdash; detail editor for the selected skill, organized into foldout sections:</p>
+    <ul>
+      <li><strong>Identity</strong> &mdash; code (<code>SCREAMING_SNAKE_CASE</code>), display name,
+        description, icon (Sprite)</li>
+      <li><strong>Categories</strong> &mdash; dropdown selectors for each skill-level category</li>
+      <li><strong>Flags</strong> &mdash; toggle checkboxes for each skill-level flag</li>
+      <li><strong>Numeric Properties</strong> &mdash; value fields for each skill-level numeric</li>
+      <li><strong>Text Properties</strong> &mdash; text fields for each skill-level text</li>
+      <li><strong>Ranks</strong> &mdash; nested rank entries, each with rank-level properties,
+        upgrade costs, and modifier assets</li>
+      <li><strong>Prerequisites</strong> &mdash; unlock conditions (targetCode + comparison + value)</li>
+      <li><strong>Skill Modifiers</strong> &mdash; SAF modifier assets on the skill itself</li>
+      <li><strong>Cross-Forge References</strong> &mdash; 12 fields organized by companion forge</li>
+      <li><strong>Character Class Restrictions</strong> &mdash; allowed character classes</li>
+    </ul>
+
+    <h3>Step 4: Settings</h3>
+    <p>Configure output paths and generation toggles:</p>
+    <ul>
+      <li><strong>Output Path</strong> &mdash; folder for generated files (default:
+        <code>Assets/GeneratedSkillDatabases/</code>)</li>
+      <li><strong>Use Custom Paths</strong> &mdash; separate folders for scripts and assets</li>
+      <li><strong>Generate Enum</strong> &mdash; toggle <code>{Prefix}Type.cs</code> generation</li>
+      <li><strong>Generate Database</strong> &mdash; toggle database and editor generation</li>
+      <li><strong>File Preview</strong> &mdash; shows all files that will be created</li>
+    </ul>
+
+    <h3>Step 5: Generate</h3>
+    <p>Review the summary and click <strong>Generate</strong> to produce your database. The generation
+      uses a two-phase process:</p>
+    <div class="step-container">
+      <span class="step-number">1</span>
+      <strong>Phase 1 &mdash; Script Generation:</strong> Writes <code>.cs</code> files (enum, database
+      class, custom editor). Unity triggers a domain reload to compile the new scripts.
+    </div>
+    <div class="step-container">
+      <span class="step-number">2</span>
+      <strong>Phase 2 &mdash; Asset Creation:</strong> After the domain reload, an
+      <code>[InitializeOnLoad]</code> handler creates the <code>.asset</code> ScriptableObject and
+      populates it with all your skill data. GUID-based persistence ensures ScriptableObject references
+      survive the reload.
+    </div>
+
+    <div class="warning">
+      <strong>Do not</strong> close the wizard window or switch editor focus during generation.
+      The two-phase process requires the <code>[InitializeOnLoad]</code> handler to run after the
+      domain reload to complete Phase 2.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 id="property-types">Property Types</h2>
+    <p>Both skill-level and rank-level support 4 types of dynamic properties:</p>
+
+    <h3>Categories</h3>
+    <p>A selection from a named list of entries. Each category has a label and a list of string entries.</p>
+    <div class="code-block">// Definition
+CategoryDefinition {
+    string label;           // e.g., "Skill Type"
+    List&lt;string&gt; entries;   // e.g., ["Attack", "Buff", "Debuff", "Heal", "Summon"]
+    int defaultIndex;       // default selection
+}
+
+// Access on a skill
+int skillTypeIndex = skill.GetCategoryValue(0);
+
+// Get the human-readable entry name
+string[] entries = database.GetCategoryEntries(0);  // skill-level
+string skillTypeName = entries[skillTypeIndex];      // "Attack"
+
+// Rank-level categories
+string[] rankEntries = database.GetRankCategoryEntries(0);
+int rankCatValue = rank.GetCategoryValue(0);</div>
+
+    <h3>Flags</h3>
+    <p>Boolean properties. Each flag has a name and a default value.</p>
+    <div class="code-block">// Access
+bool isPassive = skill.GetFlagValue(0);
+
+// Get the flag name
+string[] flagNames = database.GetFlagNames();        // skill-level
+string[] rankFlagNames = database.GetRankFlagNames(); // rank-level</div>
+
+    <h3>Numerics</h3>
+    <p>Float or integer values with optional min/max constraints.</p>
+    <div class="code-block">// Access
+float manaCost = skill.GetNumericValue(0);
+
+// Get the numeric name
+string[] numericNames = database.GetNumericNames();        // skill-level
+string[] rankNumNames = database.GetRankNumericNames();    // rank-level
+
+// Rank-level numerics (values that change per rank)
+float damage = rank.GetNumericValue(0);  // e.g., Rank 1: 50, Rank 2: 80</div>
+
+    <h3>Texts</h3>
+    <p>String values. Each text property has a name and a line count (1 = single line, &gt;1 = multi-line TextArea).</p>
+    <div class="code-block">// Access
+string tooltip = skill.GetTextValue(0);
+
+// Get the text name
+string[] textNames = database.GetTextNames();          // skill-level
+string[] rankTextNames = database.GetRankTextNames();  // rank-level</div>
+
+    <h3>Filtering by Properties</h3>
+    <p>The database interface provides filtering methods for all property types:</p>
+    <div class="code-block">// All skills where category 0 == entry index 2
+SimpleSkillDefinition[] debuffs = database.GetSkillsByCategory(0, 2);
+
+// All skills where flag 0 (Is Passive) == true
+SimpleSkillDefinition[] passives = database.GetSkillsByFlag(0, true);
+
+// All skills where numeric 1 (Cooldown) is between 0 and 5
+SimpleSkillDefinition[] quickSkills = database.GetSkillsByNumericRange(1, 0f, 5f);</div>
+  </div>
+
+  <div class="section">
+    <h2 id="ranks-and-upgrade-costs">Ranks and Upgrade Costs</h2>
+    <p>Each skill can have multiple <strong>ranks</strong> representing progression levels. Ranks are stored
+      as <code>SimpleSkillRank[]</code> on the skill definition. Each rank has:</p>
+
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td><code>rank</code></td>
+        <td><code>int</code></td>
+        <td>Rank number (starts at 1, not 0)</td>
+      </tr>
+      <tr>
+        <td><code>categoryValues</code></td>
+        <td><code>int[]</code></td>
+        <td>Rank-level category values</td>
+      </tr>
+      <tr>
+        <td><code>flagValues</code></td>
+        <td><code>bool[]</code></td>
+        <td>Rank-level flag values</td>
+      </tr>
+      <tr>
+        <td><code>numericValues</code></td>
+        <td><code>float[]</code></td>
+        <td>Rank-level numeric values (damage, healing, etc.)</td>
+      </tr>
+      <tr>
+        <td><code>textValues</code></td>
+        <td><code>string[]</code></td>
+        <td>Rank-level text values</td>
+      </tr>
+      <tr>
+        <td><code>upgradeCosts</code></td>
+        <td><code>SimpleSkillUpgradeCost[]</code></td>
+        <td>Resources required to reach this rank</td>
+      </tr>
+      <tr>
+        <td><code>modifiers</code></td>
+        <td><code>ScriptableObject[]</code></td>
+        <td>SAF modifier assets gained at this rank</td>
+      </tr>
+    </table>
+
+    <h3>Upgrade Costs</h3>
+    <p>Each rank can have multiple upgrade costs. An upgrade cost pairs a resource code with an amount:</p>
+    <div class="code-block">SimpleSkillUpgradeCost {
+    string resourceCode;  // e.g., "GOLD", "SKILL_POINT", "DRAGON_SCALE"
+    float amount;         // e.g., 500
+}</div>
+    <p>The <code>resourceCode</code> is a free-form string. It can reference an item code from SIF, an
+      attribute code from SAF, or any custom identifier your game uses. The forge does not validate
+      the code &mdash; your game logic interprets it.</p>
+
+    <h3>Querying Ranks</h3>
+    <div class="code-block">// Get all ranks for a skill
+SimpleSkillRank[] ranks = database.GetRanksForSkill("FIREBALL");
+
+// Get max rank number
+int maxRank = database.GetMaxRank("FIREBALL");
+
+// Get a specific rank from the skill struct
+SimpleSkillRank? rank2 = skill.GetRank(2);
+if (rank2.HasValue)
+{
+    float damage = rank2.Value.GetNumericValue(0);
+    SimpleSkillUpgradeCost[] costs = rank2.Value.upgradeCosts;
+}
+
+// Get the max rank from the skill struct
+int max = skill.GetMaxRank();</div>
+
+    <h3>Reagent Costs vs. Upgrade Costs</h3>
+    <div class="info">
+      <strong>Important distinction:</strong> <code>SimpleSkillUpgradeCost</code> (on each rank) represents
+      the cost to <em>level up</em> a skill to that rank. <code>SimpleSkillReagentCost</code> (on the skill
+      definition) represents items consumed <em>each time the skill is cast</em>. They are different systems.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 id="prerequisites">Prerequisites</h2>
+    <p>Skills can have prerequisites &mdash; conditions that must be met before the skill can be learned or used.
+      Each prerequisite is a <code>SimpleSkillPrerequisite</code>:</p>
+
+    <div class="code-block">SimpleSkillPrerequisite {
+    string targetCode;                  // e.g., "FIREBALL", "PLAYER_LEVEL"
+    SimpleSkillComparison comparison;   // Equals, NotEquals, GreaterThan, LessThan,
+                                        // GreaterOrEqual, LessOrEqual
+    float value;                        // e.g., 3.0 (meaning "rank 3")
+}</div>
+
+    <p>Prerequisites are evaluated using a <code>Func&lt;string, float&gt;</code> value provider &mdash; a
+      function you supply that returns the current value for any target code. This keeps the system
+      completely game-agnostic:</p>
+
+    <div class="code-block">// Check if prerequisites are met
+bool canLearn = SimpleSkillHelper.CheckAllPrerequisites(
+    skill,
+    (code) =&gt; {
+        // Return current rank for skill codes
+        if (playerSkillRanks.ContainsKey(code))
+            return playerSkillRanks[code];
+        // Return player level for "PLAYER_LEVEL"
+        if (code == "PLAYER_LEVEL")
+            return playerLevel;
+        return 0f;
+    }
+);
+
+// Query skills with a specific prerequisite
+SimpleSkillDefinition[] advancedFire = database.GetSkillsWithPrerequisite("FIREBALL");</div>
+
+    <p>Common prerequisite patterns:</p>
+    <ul>
+      <li><code>FIREBALL GreaterOrEqual 3</code> &mdash; "Fireball must be at least rank 3"</li>
+      <li><code>PLAYER_LEVEL GreaterOrEqual 10</code> &mdash; "Character level 10 required"</li>
+      <li><code>ICE_BOLT Equals 0</code> &mdash; "Must not have learned Ice Bolt" (mutual exclusion)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2 id="cross-forge-references">Cross-Forge References</h2>
+    <p>Each skill has <strong>12 cross-forge reference fields</strong> that link skills to data from companion
+      forges. All references are stored as string codes (no hard dependencies). The companion forge does not
+      need to be installed for the data to be stored &mdash; it is just strings.</p>
+
+    <h3>SIF (Simple Item Forge) &mdash; 4 Fields</h3>
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Use Cases</th>
+      </tr>
+      <tr>
+        <td><code>grantedByItemCode</code></td>
+        <td><code>string</code></td>
+        <td>Item that teaches/grants this skill</td>
+        <td>Skill books, scrolls, equipment passives, gem sockets</td>
+      </tr>
+      <tr>
+        <td><code>requiredEquipmentCode</code></td>
+        <td><code>string</code></td>
+        <td>Item that must be equipped to use this skill</td>
+        <td>Bow for arrow skills, staff for magic, specific weapon types</td>
+      </tr>
+      <tr>
+        <td><code>producesItemCode</code></td>
+        <td><code>string</code></td>
+        <td>Item created when the skill is used</td>
+        <td>Conjure food, crafting skills, transmutation, gathering yields</td>
+      </tr>
+      <tr>
+        <td><code>reagentCosts[]</code></td>
+        <td><code>SimpleSkillReagentCost[]</code></td>
+        <td>Items consumed per cast</td>
+        <td>Arrows, soul shards, catalysts, reagents</td>
+      </tr>
+    </table>
+
+    <h3>SEF (Simple Enemy Forge) &mdash; 5 Fields</h3>
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Use Cases</th>
+      </tr>
+      <tr>
+        <td><code>summonEnemyCode</code></td>
+        <td><code>string</code></td>
+        <td>Enemy summoned by this skill</td>
+        <td>Necromancer minions, pet classes, conjured creatures</td>
+      </tr>
+      <tr>
+        <td><code>learnedFromEnemyCode</code></td>
+        <td><code>string</code></td>
+        <td>Enemy that teaches this skill</td>
+        <td>Blue Mage / FF, Enemy Skill materia, monster absorption</td>
+      </tr>
+      <tr>
+        <td><code>taughtByNPCCode</code></td>
+        <td><code>string</code></td>
+        <td>NPC trainer that teaches this skill</td>
+        <td>Class trainers, skill masters, weapon trainers, move tutors</td>
+      </tr>
+      <tr>
+        <td><code>effectiveAgainstFactions[]</code></td>
+        <td><code>string[]</code></td>
+        <td>Factions this skill is strong against</td>
+        <td>Holy vs Undead, Dragon Slayer vs Dragon, type advantages</td>
+      </tr>
+      <tr>
+        <td><code>restrictedToFactionCode</code></td>
+        <td><code>string</code></td>
+        <td>Only characters of this faction can use the skill</td>
+        <td>Racial abilities, covenant skills, guild techniques</td>
+      </tr>
+    </table>
+
+    <h3>SQF (Simple Quest Forge) &mdash; 2 Fields</h3>
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Use Cases</th>
+      </tr>
+      <tr>
+        <td><code>unlockedByQuestCode</code></td>
+        <td><code>string</code></td>
+        <td>Quest that must be completed to learn this skill</td>
+        <td>Class quests, weapon art quests, mastery trials</td>
+      </tr>
+      <tr>
+        <td><code>rewardedByQuestCodes[]</code></td>
+        <td><code>string[]</code></td>
+        <td>Quests that award this skill as a reward</td>
+        <td>Reverse lookup for UI: "Learned from: The Archmage's Trial"</td>
+      </tr>
+    </table>
+
+    <h3>SAF (Simple Attribute Forge) &mdash; 1 Field</h3>
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Use Cases</th>
+      </tr>
+      <tr>
+        <td><code>modifiers[]</code></td>
+        <td><code>ScriptableObject[]</code></td>
+        <td>SAF modifier assets attached to the skill itself</td>
+        <td>Passive effects, auras, stat modifications</td>
+      </tr>
+    </table>
+    <p>Additionally, each <strong>rank</strong> has its own <code>modifiers[]</code> array for effects
+      gained at specific ranks.</p>
+
+    <h3>Convenience Accessors</h3>
+    <p>The <code>SimpleSkillDefinition</code> struct provides boolean convenience properties for checking
+      whether cross-forge references are set:</p>
+    <div class="code-block">skill.IsItemGranted          // grantedByItemCode is set
+skill.HasEquipmentRequirement // requiredEquipmentCode is set
+skill.ProducesItem           // producesItemCode is set
+skill.HasReagentCosts        // reagentCosts is non-empty
+skill.IsSummonSkill          // summonEnemyCode is set
+skill.IsEnemyLearned         // learnedFromEnemyCode is set
+skill.HasTrainer             // taughtByNPCCode is set
+skill.HasFactionEffectiveness // effectiveAgainstFactions is non-empty
+skill.IsFactionRestricted    // restrictedToFactionCode is set
+skill.IsQuestUnlocked        // unlockedByQuestCode is set
+skill.IsQuestRewarded        // rewardedByQuestCodes is non-empty
+skill.HasClassRestriction    // allowedCharacterClasses is non-empty</div>
+
+    <h3>Cross-Forge Queries</h3>
+    <p>The <code>ISimpleSkillDataSource</code> interface provides reverse-lookup queries for all cross-forge fields:</p>
+    <div class="code-block">// SIF queries
+database.GetSkillsGrantedByItem("TOME_OF_FIRE");
+database.GetSkillsRequiringEquipment("IRON_BOW");
+database.GetSkillsProducingItem("CONJURED_BREAD");
+database.GetSkillsConsumingReagent("SOUL_SHARD");
+
+// SEF queries
+database.GetSkillsSummoningEnemy("SKELETON_WARRIOR");
+database.GetSkillsLearnedFromEnemy("BLUE_DRAGON");
+database.GetSkillsTaughtByNPC("ARCHMAGE_THERON");
+database.GetSkillsEffectiveAgainstFaction("UNDEAD");
+database.GetSkillsRestrictedToFaction("ELF");
+
+// SQF queries
+database.GetSkillsUnlockedByQuest("CLASS_TRIAL_MAGE");
+database.GetSkillsRewardedByQuest("THE_ARCHMAGES_TRIAL");</div>
+  </div>
+
+  <div class="section">
+    <h2 id="character-class-restrictions">Character Class Restrictions</h2>
+    <p>Skills can be restricted to specific character classes using the <code>allowedCharacterClasses</code>
+      field. This integrates with <strong>SAF Character Templates</strong> &mdash; if you have character
+      template assets linked in Step 1, the wizard displays a checkbox list of available class names
+      in Step 3. You can also add class names manually.</p>
+
+    <p>An empty <code>allowedCharacterClasses</code> array means the skill is usable by all classes.</p>
+
+    <div class="code-block">// Check class restriction
+bool hasRestriction = skill.HasClassRestriction;
+
+// Check if a specific class can use the skill
+bool canUse = skill.IsUsableByClass("Mage");  // true if unrestricted or "Mage" is in the list
+
+// Database-level queries
+SimpleSkillDefinition[] mageOnly = database.GetSkillsForClass("Mage");       // restricted TO Mage
+SimpleSkillDefinition[] mageUsable = database.GetSkillsUsableByClass("Mage"); // restricted TO Mage + unrestricted</div>
+
+    <div class="info">
+      <strong>Distinction:</strong> <code>GetSkillsForClass("Mage")</code> returns only skills that are
+      <em>explicitly restricted</em> to the Mage class. <code>GetSkillsUsableByClass("Mage")</code> returns
+      those <em>plus</em> all unrestricted skills (skills with an empty <code>allowedCharacterClasses</code>
+      array).
+    </div>
+  </div>
+
+    </main>
+  </div>
+
+  <div class="page-nav">
+    <a href="quick-start.html">&larr; Quick Start</a>
+    <a href="skill-tree-forge.html">Skill Trees &rarr;</a>
+  </div>
+
+  <a href="#top" class="scroll-btn scroll-to-top" title="Scroll to top">&uarr;</a>
+
+</body>
+</html>

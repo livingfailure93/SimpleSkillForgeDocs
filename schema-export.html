@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Workflow - Simple Skill Forge</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="format-selector" id="top">
+    <span class="format-label">View Format:</span>
+    <a href="index.html" class="format-link active">Multi-Page</a>
+    <a href="single-page.html" class="format-link">Single Page</a>
+  </div>
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="quick-start.html">Quick Start</a></li>
+      <li><a href="skill-forge.html">Skill Forge</a></li>
+      <li><a href="skill-tree-forge.html">Skill Trees</a></li>
+      <li><a href="skill-set-forge.html">Skill Sets</a></li>
+      <li><a href="skill-combo-forge.html">Skill Combos</a></li>
+      <li><a href="schema-export.html" class="active">AI Workflow</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API Reference</a></li>
+      <li><a href="integration.html">Integration</a></li>
+      <li><a href="demos.html">Demos</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>Simple Skill Forge</h1>
+    <p class="tagline">Generate Complete Skill Databases, Skill Trees, Loadouts, and Combos in Minutes.</p>
+  </div>
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> / AI Workflow
+  </div>
+
+  <div class="page-layout">
+    <aside class="toc">
+      <h3>On This Page</h3>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#export-formats">Export Formats</a></li>
+        <li><a href="#export-workflow">Export Workflow</a></li>
+        <li><a href="#ai-instructions">Embedded AI Instructions</a></li>
+        <li><a href="#import-workflow">Import Workflow</a></li>
+        <li><a href="#tips">Tips for AI Generation</a></li>
+      </ul>
+    </aside>
+    <main class="content">
+
+  <div class="section">
+    <h1 id="overview">AI-Assisted Content Generation</h1>
+    <p>All 4 forges support <strong>schema export</strong> in Step 2 (Definitions). Export your property schema
+      with embedded AI instructions, hand it to ChatGPT, Claude, or any LLM, and import the generated content
+      back into your database &mdash; all without writing code.</p>
+    <p>This workflow lets you:</p>
+    <ul>
+      <li>Generate hundreds of skills/trees/sets/combos from a single prompt</li>
+      <li>Maintain consistency with your property schema (AI can only use your defined properties)</li>
+      <li>Iterate rapidly on content design before committing to implementation</li>
+      <li>Use AI as a creative partner for brainstorming skill concepts</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2 id="export-formats">Export Formats</h2>
+    <p>Each forge offers 3 export formats:</p>
+    <table>
+      <tr><th>Format</th><th>Best For</th><th>Content</th></tr>
+      <tr>
+        <td><strong>Full JSON</strong></td>
+        <td>Structured AI input, programmatic processing</td>
+        <td>Complete schema + definitions + existing entries + AI instructions as JSON</td>
+      </tr>
+      <tr>
+        <td><strong>Light JSON</strong></td>
+        <td>Quick AI prompts, smaller context windows</td>
+        <td>Schema + definitions + AI instructions (no existing entries)</td>
+      </tr>
+      <tr>
+        <td><strong>Markdown</strong></td>
+        <td>Human-readable, documentation, wiki</td>
+        <td>Schema + definitions formatted as Markdown tables + AI instructions</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 id="export-workflow">Export Workflow</h2>
+    <div class="step-container">
+      <span class="step-number">1</span>
+      <strong>Define your property schema</strong> in Step 2 of any wizard (or use a genre template).
+    </div>
+    <div class="step-container">
+      <span class="step-number">2</span>
+      <strong>Open the Schema Export section</strong> at the bottom of Step 2. Click "Export Full JSON",
+      "Export Light JSON", or "Export Markdown".
+    </div>
+    <div class="step-container">
+      <span class="step-number">3</span>
+      <strong>Choose a save location</strong> for the exported file.
+    </div>
+    <div class="step-container">
+      <span class="step-number">4</span>
+      <strong>Send the file to an AI</strong> with a prompt like:
+      <div class="code-block">Generate 20 ARPG skills following the schema in this file.
+Include a mix of attack, spell, buff, and passive skills.
+Each skill should have 3 ranks with increasing damage and decreasing cooldown.</div>
+    </div>
+    <div class="step-container">
+      <span class="step-number">5</span>
+      <strong>Copy the AI's JSON response</strong> and import it back in Step 2 (see Import below).
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 id="ai-instructions">Embedded AI Instructions</h2>
+    <p>The exported file includes a <code>BuildInstructions</code> section (600+ lines for the Skill Forge)
+      that teaches the AI everything it needs to know:</p>
+    <ul>
+      <li><strong>Property system explanation</strong> &mdash; how Categories, Flags, Numerics, and Texts work
+        at both skill-level and rank-level</li>
+      <li><strong>Ecosystem description</strong> &mdash; all 7 forge systems and how they connect</li>
+      <li><strong>User questions</strong> &mdash; 7-step questionnaire for the AI to ask the user about their game</li>
+      <li><strong>Per-property guidance</strong> &mdash; context-aware usage hints for each defined property</li>
+      <li><strong>Skill archetype patterns</strong> &mdash; 8 common skill types with design guidance</li>
+      <li><strong>Rank progression patterns</strong> &mdash; how to design meaningful rank upgrades</li>
+      <li><strong>Format examples</strong> &mdash; exact JSON structure using your actual definitions</li>
+      <li><strong>5-phase workflow</strong> &mdash; structured process for the AI to follow</li>
+      <li><strong>Cross-forge awareness</strong> &mdash; what data is available from companion packages</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2 id="import-workflow">Import Workflow</h2>
+    <div class="step-container">
+      <span class="step-number">1</span>
+      <strong>Copy the AI's JSON response</strong> to your clipboard or save it as a file.
+    </div>
+    <div class="step-container">
+      <span class="step-number">2</span>
+      <strong>In Step 2</strong>, click "Import JSON" in the Schema Export section.
+    </div>
+    <div class="step-container">
+      <span class="step-number">3</span>
+      <strong>Choose how to handle existing entries:</strong>
+      <ul>
+        <li><strong>Replace</strong> &mdash; delete all existing entries and import only the new ones</li>
+        <li><strong>Keep</strong> &mdash; keep existing entries and add new ones (skip duplicates by code)</li>
+        <li><strong>Cancel</strong> &mdash; abort the import</li>
+      </ul>
+    </div>
+    <div class="step-container">
+      <span class="step-number">4</span>
+      <strong>Review the import results</strong> popup showing assigned/skipped/error counts.
+    </div>
+    <p>The import validates each entry: codes must be unique C# identifiers, property arrays must match your
+      defined schema length, and required fields (code, displayName) must be present.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="tips">Tips for AI Generation</h2>
+
+    <h3>Be Specific About Your Game</h3>
+    <p>Tell the AI what kind of game you're making. "Generate ARPG skills" produces generic results.
+      "Generate skills for a dark fantasy ARPG where the player is a fallen angel regaining divine powers"
+      produces much more interesting content.</p>
+
+    <h3>Use the Full JSON Format</h3>
+    <p>The Full JSON export includes your existing entries as examples. This gives the AI concrete patterns
+      to follow, resulting in more consistent output.</p>
+
+    <h3>Generate in Batches</h3>
+    <p>Ask for 10&ndash;20 entries at a time rather than 100+. Smaller batches give the AI more room to be
+      creative and reduce the chance of repetitive content.</p>
+
+    <h3>Iterate on Definitions First</h3>
+    <p>Before generating content, make sure your property definitions are finalized. Changing definitions after
+      importing 200 skills means all those skills need to be re-synced.</p>
+
+    <h3>Review and Edit</h3>
+    <p>AI-generated content is a starting point. Use the builder in Step 3 to review, edit, and refine
+      each entry. The split-panel editor with search, sort, and filter makes this efficient.</p>
+  </div>
+
+    </main>
+  </div>
+
+  <div class="page-nav">
+    <a href="skill-combo-forge.html">&larr; Skill Combos</a>
+    <a href="templates.html">Templates &rarr;</a>
+  </div>
+
+  <a href="#top" class="scroll-btn scroll-to-top" title="Scroll to top">&uarr;</a>
+
+</body>
+</html>

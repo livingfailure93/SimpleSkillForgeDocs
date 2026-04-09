@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Tree Forge - Simple Skill Forge</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+  <div class="format-selector" id="top">
+    <span class="format-label">View Format:</span>
+    <a href="index.html" class="format-link active">Multi-Page</a>
+    <a href="single-page.html" class="format-link">Single Page</a>
+  </div>
+
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="quick-start.html">Quick Start</a></li>
+      <li><a href="skill-forge.html">Skill Forge</a></li>
+      <li><a href="skill-tree-forge.html" class="active">Skill Trees</a></li>
+      <li><a href="skill-set-forge.html">Skill Sets</a></li>
+      <li><a href="skill-combo-forge.html">Skill Combos</a></li>
+      <li><a href="schema-export.html">AI Workflow</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API Reference</a></li>
+      <li><a href="integration.html">Integration</a></li>
+      <li><a href="demos.html">Demos</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>Simple Skill Forge</h1>
+    <p class="tagline">Generate Complete Skill Databases, Skill Trees, Loadouts, and Combos in Minutes.</p>
+  </div>
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> / Skill Tree Forge
+  </div>
+
+  <div class="page-layout">
+    <aside class="toc">
+      <h3>On This Page</h3>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#the-5-step-wizard">The 5-Step Wizard</a></li>
+        <li><a href="#nodes">Nodes</a></li>
+        <li><a href="#connections">Connections</a></li>
+        <li><a href="#single-level-properties">Single-Level Properties</a></li>
+        <li><a href="#runtime">Runtime: SimpleSkillTreeTracker</a></li>
+      </ul>
+    </aside>
+    <main class="content">
+
+  <div class="section">
+    <h2 id="overview">Overview</h2>
+    <p>The <strong>Skill Tree Forge</strong> generates skill tree databases &mdash; grid-based talent trees
+      where <strong>nodes</strong> reference skills from Skill Forge databases and are connected by directed
+      <strong>parent-child edges</strong>. Each tree supports branch groups for specialization paths,
+      point costs, level requirements, and single-level dynamic properties.</p>
+
+    <p>Generated databases implement <code>ISimpleSkillTreeDataSource</code> and produce the same 4-file
+      output as the Skill Forge (enum, database, editor, asset), with the suffix <code>Tree</code>
+      (e.g., <code>ARPGTreeType.cs</code>, <code>ARPGTreeDatabase.cs</code>).</p>
+
+    <p>Open the Skill Tree Forge wizard from the Unity menu:</p>
+    <div class="code-block">Window &gt; Living Failure &gt; Simple Skill Forge &gt; Skill Tree Forge</div>
+
+    <p>Key features:</p>
+    <ul>
+      <li>Grid-based node layout with row/column positioning</li>
+      <li>Parent-child connections enforcing unlock order</li>
+      <li>Branch groups for specialization paths (e.g., "Fire", "Ice", "Lightning")</li>
+      <li>Per-node point cost, required level, and required points in tree</li>
+      <li>Nodes reference skill codes from any linked Skill Forge database</li>
+      <li>Single-level dynamic properties on each tree</li>
+      <li>Runtime tracker with unlock/reset/snapshot support</li>
+      <li>Character class restrictions via SAF Character Templates</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2 id="the-5-step-wizard">The 5-Step Wizard</h2>
+    <p>The Skill Tree Forge follows the same 5-step wizard pattern as all forges.</p>
+
+    <h3>Step 1: Setup</h3>
+    <p>Configure the database name, namespace, class prefix, and template. The Skill Tree Forge adds a
+      <strong>Linked Skill Databases</strong> section where you drag-and-drop Skill Forge database assets.
+      Linking a skill database enables searchable dropdown menus for node <code>skillCode</code> fields
+      in Step 3. You can link multiple skill databases.</p>
+    <p>You can also link SAF Character Template assets for class restriction support.</p>
+
+    <div class="info">
+      <strong>Auto-naming:</strong> The Skill Tree Forge offers auto-naming based on your database name.
+      For example, entering <code>ARPG</code> generates <code>ARPGTreeType</code>,
+      <code>ARPGTreeDatabase</code>, etc.
+    </div>
+
+    <h3>Step 2: Definitions</h3>
+    <p>Define <strong>single-level</strong> dynamic properties for your trees. Unlike the Skill Forge,
+      there is no rank-level &mdash; properties apply to the tree definition itself (e.g., "Tree Type",
+      "Total Point Cap", "Is Starter Tree"). The JSON schema export/import section is available for
+      AI-assisted content generation.</p>
+
+    <h3>Step 3: Builder</h3>
+    <p>Split-panel editor (280px left panel). The left panel lists all tree definitions with search, filter,
+      sort, bulk operations, and pagination. The right panel shows foldout sections for:</p>
+    <ul>
+      <li><strong>Identity</strong> &mdash; code, display name, description, icon</li>
+      <li><strong>Categories / Flags / Numerics / Texts</strong> &mdash; single-level properties</li>
+      <li><strong>Nodes</strong> &mdash; ReorderableList of tree nodes (9 editable fields per node)</li>
+      <li><strong>Connections</strong> &mdash; ReorderableList of directed edges (from/to node dropdowns)</li>
+      <li><strong>Character Class Restrictions</strong> &mdash; allowed character classes</li>
+    </ul>
+
+    <h3>Step 4: Settings</h3>
+    <p>Output paths, custom paths toggle, generation toggles, and file preview.</p>
+
+    <h3>Step 5: Generate</h3>
+    <p>Two-phase generation producing <code>{Prefix}TreeType.cs</code>,
+      <code>{Prefix}TreeDatabase.cs</code>, <code>{Prefix}TreeDatabaseEditor.cs</code>, and the
+      <code>.asset</code> file.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="nodes">Nodes</h2>
+    <p>Each tree contains an array of <code>SimpleSkillTreeNode</code> structs. A node represents a single
+      unlockable entry in the tree, referencing a skill from a linked Skill Forge database.</p>
+
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td><code>nodeId</code></td>
+        <td><code>int</code></td>
+        <td>Unique identifier within this tree (auto-assigned)</td>
+      </tr>
+      <tr>
+        <td><code>skillCode</code></td>
+        <td><code>string</code></td>
+        <td>Skill code referencing a Skill Forge database entry</td>
+      </tr>
+      <tr>
+        <td><code>row</code></td>
+        <td><code>int</code></td>
+        <td>Row position in the tree grid (for visual layout)</td>
+      </tr>
+      <tr>
+        <td><code>column</code></td>
+        <td><code>int</code></td>
+        <td>Column position in the tree grid (for visual layout)</td>
+      </tr>
+      <tr>
+        <td><code>pointCost</code></td>
+        <td><code>int</code></td>
+        <td>Skill points required to unlock this node</td>
+      </tr>
+      <tr>
+        <td><code>requiredLevel</code></td>
+        <td><code>int</code></td>
+        <td>Minimum character level required to unlock this node</td>
+      </tr>
+      <tr>
+        <td><code>requiredPointsInTree</code></td>
+        <td><code>int</code></td>
+        <td>Minimum total points already spent in this tree to unlock</td>
+      </tr>
+      <tr>
+        <td><code>branchGroup</code></td>
+        <td><code>string</code></td>
+        <td>Specialization path identifier (e.g., "Fire", "Ice"). Nodes with the same
+          branchGroup form a specialization track. Empty = no specific branch.</td>
+      </tr>
+      <tr>
+        <td><code>isRequired</code></td>
+        <td><code>bool</code></td>
+        <td>Whether this node must be unlocked to proceed further down its branch</td>
+      </tr>
+    </table>
+
+    <h3>Querying Nodes</h3>
+    <div class="code-block">// Get all nodes for a tree
+SimpleSkillTreeNode[] nodes = database.GetNodesForTree("WARRIOR_COMBAT");
+
+// Get a node by ID from the tree struct
+SimpleSkillTreeNode? node = tree.GetNodeById(5);
+
+// Get root nodes (no parent connections)
+SimpleSkillTreeNode[] roots = tree.GetRootNodes();
+
+// Get nodes in a specific branch
+SimpleSkillTreeNode[] fireNodes = tree.GetNodesInBranch("Fire");
+
+// Get all unique branch groups
+string[] branches = tree.GetBranchGroups();
+// Also available at the database level:
+string[] dbBranches = database.GetBranchGroups("WARRIOR_COMBAT");
+
+// Check if a tree contains a specific skill
+bool hasFireball = tree.ContainsSkill("FIREBALL");
+
+// Find all trees containing a skill
+SimpleSkillTreeDefinition[] treesWithFireball =
+    database.FindTreesContainingSkill("FIREBALL");</div>
+  </div>
+
+  <div class="section">
+    <h2 id="connections">Connections</h2>
+    <p>Connections are directed edges (<code>SimpleSkillTreeConnection</code>) that define parent-child
+      unlock dependencies between nodes. A child node cannot be unlocked until all parent nodes are
+      unlocked.</p>
+
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td><code>fromNodeId</code></td>
+        <td><code>int</code></td>
+        <td>Parent node ID (must be unlocked first)</td>
+      </tr>
+      <tr>
+        <td><code>toNodeId</code></td>
+        <td><code>int</code></td>
+        <td>Child node ID (unlockable after parent)</td>
+      </tr>
+    </table>
+
+    <h3>Querying Connections</h3>
+    <div class="code-block">// Get all connections for a tree
+SimpleSkillTreeConnection[] connections = database.GetConnectionsForTree("WARRIOR_COMBAT");
+
+// Get connections from/to a specific node
+SimpleSkillTreeConnection[] children = tree.GetConnectionsFrom(nodeId);
+SimpleSkillTreeConnection[] parents = tree.GetConnectionsTo(nodeId);
+
+// Get parent/child node IDs directly
+int[] parentIds = tree.GetParentNodeIds(nodeId);
+int[] childIds = tree.GetChildNodeIds(nodeId);</div>
+  </div>
+
+  <div class="section">
+    <h2 id="single-level-properties">Single-Level Properties</h2>
+    <p>Skill trees use <strong>single-level</strong> dynamic properties (Categories, Flags, Numerics, Texts)
+      on the tree definition itself. There is no child-level like the Skill Forge's rank-level properties.</p>
+
+    <div class="code-block">// Access tree-level properties
+int treeType = tree.GetCategoryValue(0);
+bool isStarterTree = tree.GetFlagValue(0);
+float pointCap = tree.GetNumericValue(0);
+string lore = tree.GetTextValue(0);
+
+// Get property definition labels
+string[] catLabels = database.GetCategoryLabels();     // e.g., ["Tree Type", "Specialization"]
+string[] catEntries = database.GetCategoryEntries(0);  // e.g., ["Class", "Subclass", "Universal"]
+string[] flagNames = database.GetFlagNames();          // e.g., ["Is Starter Tree", "Requires Mastery"]
+string[] numNames = database.GetNumericNames();        // e.g., ["Total Point Cap", "Required Level"]
+string[] textNames = database.GetTextNames();          // e.g., ["Tree Description", "Lore"]
+
+// Filter trees by property values
+SimpleSkillTreeDefinition[] classTrees = database.GetTreesByCategory(0, 0);
+SimpleSkillTreeDefinition[] starterTrees = database.GetTreesByFlag(0, true);
+SimpleSkillTreeDefinition[] bigTrees = database.GetTreesByNumericRange(0, 20f, 100f);</div>
+  </div>
+
+  <div class="section">
+    <h2 id="runtime">Runtime: SimpleSkillTreeTracker</h2>
+    <p><code>SimpleSkillTreeTracker</code> is a runtime state tracker that manages skill tree node unlocks,
+      point spending, prerequisite validation, cascade resets, and serializable snapshots.</p>
+
+    <h3>Setup</h3>
+    <div class="code-block">// Create a tracker from your tree database
+var tracker = new SimpleSkillTreeTracker(treeDatabase);
+
+// Initialize trees for tracking (must be called before unlock/query)
+tracker.InitializeTree("WARRIOR_COMBAT");
+tracker.InitializeTree("MAGE_ARCANE");</div>
+
+    <h3>Unlocking Nodes</h3>
+    <div class="code-block">// Check if a node can be unlocked (validates all prerequisites)
+bool canUnlock = tracker.CanUnlockNode(
+    "WARRIOR_COMBAT",
+    nodeId: 3,
+    playerLevel: 10,
+    availablePoints: 5  // pass -1 to skip point check
+);
+
+// Unlock a node (does NOT deduct points -- your game manages point balance)
+bool unlocked = tracker.UnlockNode("WARRIOR_COMBAT", nodeId: 3, playerLevel: 10);
+
+// Check if a node is unlocked
+bool isUnlocked = tracker.IsNodeUnlocked("WARRIOR_COMBAT", nodeId: 3);
+
+// Check if a skill is unlocked in ANY initialized tree
+bool hasFireball = tracker.IsSkillUnlocked("FIREBALL");</div>
+
+    <div class="info">
+      <strong>Point management:</strong> <code>UnlockNode</code> tracks points spent internally
+      (for <code>requiredPointsInTree</code> validation) but does <strong>not</strong> deduct from a
+      player point balance. Your game code is responsible for checking and deducting available points
+      before calling <code>UnlockNode</code>.
+    </div>
+
+    <h3>Queries</h3>
+    <div class="code-block">// Get total points spent in a tree
+int spent = tracker.GetPointsSpent("WARRIOR_COMBAT");
+
+// Get points spent in a specific branch
+int fireSpent = tracker.GetPointsSpentInBranch("WARRIOR_COMBAT", "Fire");
+
+// Get all unlocked node IDs
+int[] unlockedIds = tracker.GetUnlockedNodeIds("WARRIOR_COMBAT");
+
+// Get all nodes that can currently be unlocked
+int[] available = tracker.GetAvailableNodeIds("WARRIOR_COMBAT", playerLevel: 10, availablePoints: 5);
+
+// Get all unlocked skill codes across ALL initialized trees
+string[] allUnlocked = tracker.GetAllUnlockedSkillCodes();</div>
+
+    <h3>Reset</h3>
+    <div class="code-block">// Reset a single node (cascades to dependent child nodes)
+int refunded = tracker.ResetNode("WARRIOR_COMBAT", nodeId: 3);
+
+// Reset an entire tree
+int totalRefunded = tracker.ResetTree("WARRIOR_COMBAT");
+
+// Clear all tracked state
+tracker.ClearAll();</div>
+
+    <div class="info">
+      <strong>Cascade reset:</strong> When you reset a node, all child nodes that depend on it (directly
+      or transitively) are also reset. The returned value is the total points refunded across all reset nodes.
+    </div>
+
+    <h3>Events</h3>
+    <div class="code-block">tracker.OnNodeUnlocked += (treeCode, nodeId) =&gt;
+    Debug.Log($"Unlocked node {nodeId} in {treeCode}");
+
+tracker.OnNodeReset += (treeCode, nodeId) =&gt;
+    Debug.Log($"Reset node {nodeId} in {treeCode}");
+
+tracker.OnTreeReset += (treeCode) =&gt;
+    Debug.Log($"Tree {treeCode} fully reset");
+
+tracker.OnPointsChanged += (treeCode, newTotal) =&gt;
+    Debug.Log($"Points spent in {treeCode}: {newTotal}");</div>
+
+    <h3>Snapshots (Save/Load)</h3>
+    <div class="code-block">// Save current state
+SimpleSkillTreeTrackerSnapshot snapshot = tracker.CreateSnapshot();
+string json = JsonUtility.ToJson(snapshot);
+
+// Load state
+var loaded = JsonUtility.FromJson&lt;SimpleSkillTreeTrackerSnapshot&gt;(json);
+tracker.RestoreFromSnapshot(loaded);</div>
+  </div>
+
+    </main>
+  </div>
+
+  <div class="page-nav">
+    <a href="skill-forge.html">&larr; Skill Forge</a>
+    <a href="skill-set-forge.html">Skill Sets &rarr;</a>
+  </div>
+
+  <a href="#top" class="scroll-btn scroll-to-top" title="Scroll to top">&uarr;</a>
+
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Scenes - Simple Skill Forge</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="format-selector" id="top">
+    <span class="format-label">View Format:</span>
+    <a href="index.html" class="format-link active">Multi-Page</a>
+    <a href="single-page.html" class="format-link">Single Page</a>
+  </div>
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="quick-start.html">Quick Start</a></li>
+      <li><a href="skill-forge.html">Skill Forge</a></li>
+      <li><a href="skill-tree-forge.html">Skill Trees</a></li>
+      <li><a href="skill-set-forge.html">Skill Sets</a></li>
+      <li><a href="skill-combo-forge.html">Skill Combos</a></li>
+      <li><a href="schema-export.html">AI Workflow</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API Reference</a></li>
+      <li><a href="integration.html">Integration</a></li>
+      <li><a href="demos.html" class="active">Demos</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>Simple Skill Forge</h1>
+    <p class="tagline">Generate Complete Skill Databases, Skill Trees, Loadouts, and Combos in Minutes.</p>
+  </div>
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> / Demo Scenes
+  </div>
+
+  <div class="page-layout">
+    <aside class="toc">
+      <h3>On This Page</h3>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#arpg-demo">ARPG Demo</a></li>
+        <li><a href="#soulslike-demo">Soulslike Demo</a></li>
+        <li><a href="#generating-demos">Generating Demo Scenes</a></li>
+        <li><a href="#assigning-databases">Assigning Databases</a></li>
+      </ul>
+    </aside>
+    <main class="content">
+
+  <div class="section">
+    <h1 id="overview">Demo Scenes</h1>
+    <p>Simple Skill Forge ships with two interactive demo scenes that showcase all 4 forges and their runtime
+      components. Both demos are generated procedurally via editor menu commands &mdash; no manual scene setup required.</p>
+    <table>
+      <tr><th>Demo</th><th>Purpose</th><th>Requirements</th></tr>
+      <tr>
+        <td><strong>ARPG Demo</strong></td>
+        <td>Proves the SSF runtime API works: browse skills, rank up, unlock tree nodes, equip loadouts, cast combos</td>
+        <td>SSF only (standalone)</td>
+      </tr>
+      <tr>
+        <td><strong>Soulslike Demo</strong></td>
+        <td>Showcases cross-forge integration: browse items/enemies/quests and see how they connect to skills</td>
+        <td>SSF + SAF + SIF + SEF + SQF (all installed)</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 id="arpg-demo">ARPG Demo</h2>
+    <p>A 4-tab interactive skill system with Royal Orange theme (1920x1080).</p>
+
+    <h3>Tab 1: Skills</h3>
+    <p>Left panel: searchable skill list with rank badges. Right panel: skill detail with identity, properties,
+      rank stats (per-rank costs, UNLOCKED/LOCKED status), prerequisites (MET/NOT MET), and cross-forge connections.
+      RANK UP button deducts resources. EQUIP TO BAR adds the skill to the bottom bar.</p>
+
+    <h3>Tab 2: Skill Trees</h3>
+    <p>Left panel: tree list. Right panel: node list showing skill name, SP cost, level requirement, and
+      UNLOCK/UNLOCKED/LOCKED status. Click a node to unlock it (deducts skill points). RESET TREE refunds all points.</p>
+
+    <h3>Tab 3: Loadout</h3>
+    <p>Left panel: set list with equipped count. Right panel: dropdown per slot for skill assignment, X button
+      to unequip, and set bonus progress (3/5 threshold bonuses with OK/[ ] indicators).</p>
+
+    <h3>Tab 4: Combos</h3>
+    <p>Left panel: combo list with step count. Right panel: step sequence with skill names, required/optional flags,
+      timing windows, alternate skills, reward thresholds. Live tracker shows combo progress bars and next valid skills.</p>
+
+    <h3>Bottom Bar</h3>
+    <p>6 skill slots with CAST buttons. Casting updates combo tracking, shows combo progress, set status, and cast log.
+      Cyclic assignment &mdash; equipping when full wraps to slot 0.</p>
+
+    <h3>Top Bar</h3>
+    <p>Class dropdown (filters all tabs by character class). Cheat buttons: +LVL, +SP, +Souls for testing.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="soulslike-demo">Soulslike Demo</h2>
+    <p>A 7-tab cross-forge showcase with upsell panel. Same Royal Orange theme.</p>
+
+    <h3>Upsell Panel</h3>
+    <p>Shown when any companion package (SAF/SIF/SEF/SQF) is not installed. Displays a checklist of
+      INSTALLED/MISSING packages with descriptions of what each provides. A <code>forceShowUpsell</code> debug
+      toggle on the component lets you test this panel even with all packages installed.</p>
+
+    <h3>Tabs 1&ndash;4: Skills, Trees, Loadout, Combos</h3>
+    <p>Same functionality as the ARPG demo. Uses "Souls" instead of "Gold" for the Soulslike theme.</p>
+
+    <h3>Tab 5: Items</h3>
+    <p>Browses all items from assigned SIF databases. Shows item name, code, description, properties (categories,
+      flags, numerics, texts reflected from the item database), and <strong>skill connections</strong> &mdash;
+      which skills grant, require, produce, or consume this item.</p>
+
+    <h3>Tab 6: Enemies</h3>
+    <p>Browses all enemies from assigned SEF databases. Shows enemy name, code, description, info (properties
+      reflected from the enemy database), and <strong>skill connections</strong> &mdash; which skills are
+      taught by, trained by, or summoned by this enemy.</p>
+
+    <h3>Tab 7: Quests</h3>
+    <p>Browses all quests from assigned SQF databases. Shows quest name, code, description, and
+      <strong>skill connections</strong> &mdash; which skills this quest unlocks or rewards.</p>
+
+    <h3>Cross-Forge Reflection</h3>
+    <p>The Soulslike demo uses <code>FindType()</code> to scan all loaded assemblies for SIF/SEF/SQF interfaces.
+      It builds lookup dictionaries (code &rarr; name, code &rarr; description) and reverse lookups
+      (item &rarr; skills that reference it) via reflection at startup. No hard dependencies on any companion package.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="generating-demos">Generating Demo Scenes</h2>
+
+    <h3>ARPG Demo</h3>
+    <div class="step-container">
+      <span class="step-number">1</span>
+      <strong>Generate databases</strong> using the 4 forge wizards with the ARPG template.
+    </div>
+    <div class="step-container">
+      <span class="step-number">2</span>
+      <strong>Generate the demo canvas:</strong>
+      <code>Window &gt; Living Failure &gt; Simple Skill Forge &gt; Generate Skill Demo</code>
+    </div>
+    <div class="step-container">
+      <span class="step-number">3</span>
+      <strong>Assign databases</strong> to the SkillDemo component (see below).
+    </div>
+    <div class="step-container">
+      <span class="step-number">4</span>
+      <strong>Press Play</strong> and interact with the skill system.
+    </div>
+
+    <h3>Soulslike Demo</h3>
+    <div class="step-container">
+      <span class="step-number">1</span>
+      <strong>Install</strong> SAF, SIF, SEF, and SQF from the Asset Store.
+    </div>
+    <div class="step-container">
+      <span class="step-number">2</span>
+      <strong>Generate databases</strong> using all forge wizards with Soulslike templates.
+    </div>
+    <div class="step-container">
+      <span class="step-number">3</span>
+      <strong>Generate the demo canvas:</strong>
+      <code>Window &gt; Living Failure &gt; Simple Skill Forge &gt; Generate Soulslike Demo</code>
+    </div>
+    <div class="step-container">
+      <span class="step-number">4</span>
+      <strong>Assign all databases</strong> (SSF + SAF + SIF + SEF + SQF) to the SoulslikeSkillDemo component.
+    </div>
+    <div class="step-container">
+      <span class="step-number">5</span>
+      <strong>Press Play</strong> and browse across all forges.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 id="assigning-databases">Assigning Databases</h2>
+    <p>After generating a demo canvas, select the root canvas GameObject in the Hierarchy. The demo component
+      will be attached with empty database array fields:</p>
+
+    <h3>ARPG Demo (SkillDemo component)</h3>
+    <table>
+      <tr><th>Field</th><th>What to Assign</th></tr>
+      <tr><td><code>skillDatabases</code></td><td>Your generated Skill database .asset(s)</td></tr>
+      <tr><td><code>treeDatabases</code></td><td>Your generated Skill Tree database .asset(s)</td></tr>
+      <tr><td><code>setDatabases</code></td><td>Your generated Skill Set database .asset(s)</td></tr>
+      <tr><td><code>comboDatabases</code></td><td>Your generated Skill Combo database .asset(s)</td></tr>
+    </table>
+
+    <h3>Soulslike Demo (SoulslikeSkillDemo component)</h3>
+    <table>
+      <tr><th>Field</th><th>What to Assign</th></tr>
+      <tr><td><code>skillDatabases</code></td><td>SSF Skill database(s)</td></tr>
+      <tr><td><code>treeDatabases</code></td><td>SSF Skill Tree database(s)</td></tr>
+      <tr><td><code>setDatabases</code></td><td>SSF Skill Set database(s)</td></tr>
+      <tr><td><code>comboDatabases</code></td><td>SSF Skill Combo database(s)</td></tr>
+      <tr><td><code>attributeDatabases</code></td><td>SAF Attribute database(s)</td></tr>
+      <tr><td><code>modifierAssets</code></td><td>SAF Modifier assets</td></tr>
+      <tr><td><code>itemDatabases</code></td><td>SIF Item database(s)</td></tr>
+      <tr><td><code>enemyDatabases</code></td><td>SEF Enemy database(s)</td></tr>
+      <tr><td><code>factionDatabases</code></td><td>SEF Faction database(s)</td></tr>
+      <tr><td><code>questDatabases</code></td><td>SQF Quest database(s)</td></tr>
+      <tr><td><code>characterTemplates</code></td><td>SAF Character Template assets</td></tr>
+    </table>
+    <div class="warning">All database arrays accept multiple assets. If you generated separate ARPG and Soulslike
+      databases, you can assign both to the same array &mdash; the demo will merge and deduplicate entries.</div>
+  </div>
+
+    </main>
+  </div>
+
+  <div class="page-nav">
+    <a href="integration.html">&larr; Integration</a>
+    <a href="troubleshooting.html">Troubleshooting &rarr;</a>
+  </div>
+
+  <a href="#top" class="scroll-btn scroll-to-top" title="Scroll to top">&uarr;</a>
+
+</body>
+</html>

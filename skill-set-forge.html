@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Set Forge - Simple Skill Forge</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+  <div class="format-selector" id="top">
+    <span class="format-label">View Format:</span>
+    <a href="index.html" class="format-link active">Multi-Page</a>
+    <a href="single-page.html" class="format-link">Single Page</a>
+  </div>
+
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="quick-start.html">Quick Start</a></li>
+      <li><a href="skill-forge.html">Skill Forge</a></li>
+      <li><a href="skill-tree-forge.html">Skill Trees</a></li>
+      <li><a href="skill-set-forge.html" class="active">Skill Sets</a></li>
+      <li><a href="skill-combo-forge.html">Skill Combos</a></li>
+      <li><a href="schema-export.html">AI Workflow</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API Reference</a></li>
+      <li><a href="integration.html">Integration</a></li>
+      <li><a href="demos.html">Demos</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>Simple Skill Forge</h1>
+    <p class="tagline">Generate Complete Skill Databases, Skill Trees, Loadouts, and Combos in Minutes.</p>
+  </div>
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> / Skill Set Forge
+  </div>
+
+  <div class="page-layout">
+    <aside class="toc">
+      <h3>On This Page</h3>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#the-5-step-wizard">The 5-Step Wizard</a></li>
+        <li><a href="#slots">Slots</a></li>
+        <li><a href="#bonuses">Bonuses</a></li>
+        <li><a href="#single-level-properties">Single-Level Properties</a></li>
+        <li><a href="#runtime">Runtime: SimpleSkillBarManager</a></li>
+      </ul>
+    </aside>
+    <main class="content">
+
+  <div class="section">
+    <h2 id="overview">Overview</h2>
+    <p>The <strong>Skill Set Forge</strong> generates skill set databases &mdash; loadout templates that
+      group skills into typed <strong>slots</strong> with threshold-based <strong>set bonuses</strong>
+      that activate when enough skills from the set are equipped. Think item set bonuses from Diablo
+      or gear sets from MMOs, but applied to skills.</p>
+
+    <p>Generated databases implement <code>ISimpleSkillSetDataSource</code> and produce the standard 4-file
+      output with the suffix <code>Set</code> (e.g., <code>ARPGSetType.cs</code>,
+      <code>ARPGSetDatabase.cs</code>).</p>
+
+    <p>Open the Skill Set Forge wizard from the Unity menu:</p>
+    <div class="code-block">Window &gt; Living Failure &gt; Simple Skill Forge &gt; Skill Set Forge</div>
+
+    <p>Key features:</p>
+    <ul>
+      <li>Typed slots with required/optional designation</li>
+      <li>Skill code references from linked Skill Forge databases</li>
+      <li>Threshold-based set bonuses (e.g., "Equip 3/5 for bonus")</li>
+      <li>SAF modifier assets on bonuses</li>
+      <li>Single-level dynamic properties on each set</li>
+      <li>Runtime manager with equip/unequip, bonus tracking, and snapshots</li>
+      <li>Character class restrictions via SAF Character Templates</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2 id="the-5-step-wizard">The 5-Step Wizard</h2>
+    <p>The Skill Set Forge follows the same 5-step wizard pattern as all forges.</p>
+
+    <h3>Step 1: Setup</h3>
+    <p>Configure the database name, namespace, class prefix, and template. Link Skill Forge database
+      assets for searchable skill code dropdowns in Step 3. Link SAF Character Template assets for
+      class restriction support. Supports multiple linked databases with duplicate detection.</p>
+
+    <h3>Step 2: Definitions</h3>
+    <p>Define <strong>single-level</strong> dynamic properties for your sets (e.g., "Set Type",
+      "Max Slots", "Is Starter Set"). JSON schema export/import is available for AI-assisted
+      content generation with context-aware usage hints.</p>
+
+    <h3>Step 3: Builder</h3>
+    <p>Split-panel editor (280px left panel). The right panel shows foldout sections for:</p>
+    <ul>
+      <li><strong>Identity</strong> &mdash; code, display name, description, icon</li>
+      <li><strong>Categories / Flags / Numerics / Texts</strong> &mdash; single-level properties</li>
+      <li><strong>Slots</strong> &mdash; ReorderableList with 3 fields per slot (slotType, skillCode, isRequired)</li>
+      <li><strong>Bonuses</strong> &mdash; ReorderableList with threshold count, description, and SAF modifier assets</li>
+      <li><strong>Character Class Restrictions</strong> &mdash; allowed character classes</li>
+    </ul>
+
+    <h3>Step 4: Settings</h3>
+    <p>Output paths, custom paths toggle, generation toggles, and file preview.</p>
+
+    <h3>Step 5: Generate</h3>
+    <p>Two-phase generation producing <code>{Prefix}SetType.cs</code>,
+      <code>{Prefix}SetDatabase.cs</code>, <code>{Prefix}SetDatabaseEditor.cs</code>, and the
+      <code>.asset</code> file with all slot, bonus, and modifier data baked in.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="slots">Slots</h2>
+    <p>Each set contains an array of <code>SimpleSkillSetSlot</code> structs. A slot defines a position
+      in the loadout with a type label, an assigned skill code, and a required flag.</p>
+
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td><code>slotType</code></td>
+        <td><code>string</code></td>
+        <td>Slot type label (e.g., "Active1", "Active2", "Passive1", "Ultimate"). Used for
+          categorizing and filtering slots. Free-form string &mdash; your game defines the
+          slot type conventions.</td>
+      </tr>
+      <tr>
+        <td><code>skillCode</code></td>
+        <td><code>string</code></td>
+        <td>Skill code referencing a Skill Forge database entry. In the wizard, this is
+          presented as a searchable dropdown when skill databases are linked.</td>
+      </tr>
+      <tr>
+        <td><code>isRequired</code></td>
+        <td><code>bool</code></td>
+        <td>Whether this slot must be filled for the set to be considered valid. Optional
+          slots can be left empty at runtime.</td>
+      </tr>
+    </table>
+
+    <h3>Querying Slots</h3>
+    <div class="code-block">// Get all slots for a set
+SimpleSkillSetSlot[] slots = database.GetSlotsForSet("WARRIOR_KIT");
+
+// Convenience accessors on the set struct
+int totalSlots = set.SlotCount;
+int requiredSlots = set.RequiredSlotCount;
+
+// Get all unique slot types
+string[] types = set.GetSlotTypes();  // e.g., ["Active", "Passive", "Ultimate"]
+
+// Get slots of a specific type
+SimpleSkillSetSlot[] activeSlots = set.GetSlotsByType("Active");
+
+// Check if the set contains a specific skill
+bool hasSlash = set.ContainsSkill("SLASH");
+
+// Get all skill codes in the set (non-empty)
+string[] skillCodes = set.GetSkillCodes();
+
+// Find all sets containing a skill
+SimpleSkillSetDefinition[] setsWithSlash = database.FindSetsContainingSkill("SLASH");</div>
+  </div>
+
+  <div class="section">
+    <h2 id="bonuses">Bonuses</h2>
+    <p>Each set can have multiple <code>SimpleSkillSetBonus</code> entries that activate when enough
+      skills from the set are equipped. This follows the same threshold pattern as item set bonuses.</p>
+
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td><code>requiredCount</code></td>
+        <td><code>int</code></td>
+        <td>Number of equipped skills from this set required to activate the bonus</td>
+      </tr>
+      <tr>
+        <td><code>bonusDescription</code></td>
+        <td><code>string</code></td>
+        <td>Human-readable description of the bonus effect (e.g., "+20% fire damage")</td>
+      </tr>
+      <tr>
+        <td><code>modifiers[]</code></td>
+        <td><code>ScriptableObject[]</code></td>
+        <td>SAF modifier assets applied when this bonus is active. Requires Simple Attribute
+          Forge to be installed for the modifier assets &mdash; the field still exists without SAF,
+          but modifiers will be empty.</td>
+      </tr>
+    </table>
+
+    <h3>Querying Bonuses</h3>
+    <div class="code-block">// Get all bonuses for a set
+SimpleSkillSetBonus[] bonuses = database.GetBonusesForSet("FIRE_MAGE_KIT");
+
+// Convenience accessors on the set struct
+int bonusCount = set.BonusCount;
+
+// Get the highest-tier bonus that is active for a given equipped count
+SimpleSkillSetBonus? best = set.GetBonusForCount(equippedCount: 3);
+
+// Get ALL bonuses active at a given count (stacking)
+SimpleSkillSetBonus[] active = set.GetActiveBonuses(equippedCount: 3);</div>
+
+    <h3>Example: Tiered Bonuses</h3>
+    <p>A set with 5 slots might define bonuses like this:</p>
+    <table>
+      <tr>
+        <th>Required Count</th>
+        <th>Bonus Description</th>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>+10% fire damage</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>+20% fire damage, fire skills cost 15% less mana</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>+50% fire damage, all fire skills gain area of effect</td>
+      </tr>
+    </table>
+    <p>With 3 skills equipped, both the "2-piece" and "3-piece" bonuses are active.
+      <code>GetActiveBonuses(3)</code> returns both.</p>
+  </div>
+
+  <div class="section">
+    <h2 id="single-level-properties">Single-Level Properties</h2>
+    <p>Skill sets use <strong>single-level</strong> dynamic properties on the set definition itself.</p>
+
+    <div class="code-block">// Access set-level properties
+int setType = set.GetCategoryValue(0);
+bool isStarterSet = set.GetFlagValue(0);
+float maxSlots = set.GetNumericValue(0);
+string flavor = set.GetTextValue(0);
+
+// Get property definition labels
+string[] catLabels = database.GetCategoryLabels();     // e.g., ["Set Type", "Class Association"]
+string[] catEntries = database.GetCategoryEntries(0);  // e.g., ["Class", "Build", "Loadout"]
+string[] flagNames = database.GetFlagNames();          // e.g., ["Is Starter Set", "Allows Custom Slots"]
+string[] numNames = database.GetNumericNames();        // e.g., ["Max Slots", "Difficulty Rating"]
+string[] textNames = database.GetTextNames();          // e.g., ["Set Description", "Flavor Text"]
+
+// Filter sets by property values
+SimpleSkillSetDefinition[] classSets = database.GetSetsByCategory(0, 0);
+SimpleSkillSetDefinition[] starterSets = database.GetSetsByFlag(0, true);
+SimpleSkillSetDefinition[] bigSets = database.GetSetsByNumericRange(0, 4f, 10f);</div>
+  </div>
+
+  <div class="section">
+    <h2 id="runtime">Runtime: SimpleSkillBarManager</h2>
+    <p><code>SimpleSkillBarManager</code> is a runtime manager that handles equipping/unequipping skills
+      to set slots, tracks threshold-based set bonuses, fires events on changes, and supports
+      serializable snapshots for save/load.</p>
+
+    <h3>Setup</h3>
+    <div class="code-block">// Create a manager from your set database
+var manager = new SimpleSkillBarManager(setDatabase);
+
+// Initialize sets for tracking (must be called before equip/query)
+manager.InitializeSet("WARRIOR_KIT");
+manager.InitializeSet("FIRE_MAGE_KIT");</div>
+
+    <h3>Equip and Unequip</h3>
+    <div class="code-block">// Equip a skill to a specific slot index
+manager.EquipSkill("WARRIOR_KIT", slotIndex: 0, "SLASH");
+manager.EquipSkill("WARRIOR_KIT", slotIndex: 1, "SHIELD_BASH");
+manager.EquipSkill("WARRIOR_KIT", slotIndex: 2, "CHARGE");
+
+// Unequip a specific slot
+manager.UnequipSkill("WARRIOR_KIT", slotIndex: 1);
+
+// Clear all slots in a set
+int cleared = manager.ClearLoadout("WARRIOR_KIT");</div>
+
+    <div class="info">
+      <strong>Auto-swap:</strong> If you equip a skill to a slot that already has a skill,
+      the previous skill is automatically unequipped first. Both <code>OnSkillUnequipped</code>
+      and <code>OnSkillEquipped</code> events fire.
+    </div>
+
+    <h3>Queries</h3>
+    <div class="code-block">// Get what is equipped in a specific slot
+string skill = manager.GetEquippedSkill("WARRIOR_KIT", slotIndex: 0);  // "SLASH"
+
+// Get the number of filled slots
+int equipped = manager.GetEquippedCount("WARRIOR_KIT");
+
+// Check if all required slots are filled
+bool valid = manager.AreRequiredSlotsFilled("WARRIOR_KIT");
+
+// Get currently active bonuses
+SimpleSkillSetBonus[] bonuses = manager.GetActiveBonuses("WARRIOR_KIT");
+
+// Check if a specific bonus (by index) is active
+bool has3Piece = manager.IsBonusActive("WARRIOR_KIT", bonusIndex: 1);
+
+// Check if a skill is equipped in ANY initialized set
+bool equipped = manager.IsSkillEquipped("SLASH");
+
+// Get all equipped skill codes across all sets
+string[] allEquipped = manager.GetAllEquippedSkillCodes();
+
+// Find which set and slot a skill is in
+string setCode;
+int slotIndex;
+if (manager.FindEquippedSkill("SLASH", out setCode, out slotIndex))
+    Debug.Log($"SLASH is in {setCode}, slot {slotIndex}");</div>
+
+    <h3>Events</h3>
+    <div class="code-block">manager.OnSkillEquipped += (setCode, slotIndex, skillCode) =&gt;
+    Debug.Log($"Equipped {skillCode} to {setCode} slot {slotIndex}");
+
+manager.OnSkillUnequipped += (setCode, slotIndex, previousSkillCode) =&gt;
+    Debug.Log($"Unequipped {previousSkillCode} from {setCode} slot {slotIndex}");
+
+manager.OnSetBonusActivated += (setCode, bonusIndex) =&gt;
+    Debug.Log($"Bonus {bonusIndex} activated in {setCode}");
+
+manager.OnSetBonusDeactivated += (setCode, bonusIndex) =&gt;
+    Debug.Log($"Bonus {bonusIndex} deactivated in {setCode}");
+
+manager.OnLoadoutChanged += (setCode) =&gt;
+    Debug.Log($"Loadout changed in {setCode}");</div>
+
+    <h3>Snapshots (Save/Load)</h3>
+    <div class="code-block">// Save current state
+SimpleSkillBarSnapshot snapshot = manager.CreateSnapshot();
+string json = JsonUtility.ToJson(snapshot);
+
+// Load state
+var loaded = JsonUtility.FromJson&lt;SimpleSkillBarSnapshot&gt;(json);
+manager.RestoreFromSnapshot(loaded);</div>
+  </div>
+
+    </main>
+  </div>
+
+  <div class="page-nav">
+    <a href="skill-tree-forge.html">&larr; Skill Trees</a>
+    <a href="skill-combo-forge.html">Skill Combos &rarr;</a>
+  </div>
+
+  <a href="#top" class="scroll-btn scroll-to-top" title="Scroll to top">&uarr;</a>
+
+</body>
+</html>
